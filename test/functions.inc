@@ -1,26 +1,18 @@
 function oneTimeSetUp() {
   source $(dirname $0)/../lib/pure-getopt-plus.inc
-
-  export PGOP_GLOBAL=(
-    "f: filters:"
-    "-  output"
-    "q: query:"
-    "b  version"
-  )
-
 }
 
-function oneTimeTearDown() {
-  echo "one time tear down"
-}
+#function oneTimeTearDown() {
+#  echo "one time tear down"
+#}
+#
+#function setUp() {
+#  echo "setting up"
+#}
 
-function tearDown() {
-  echo "tear down"
-}
-
-function setUp() {
-  echo "set up"
-}
+#function tearDown() {
+#  unset PGOP_MY_CONTEXT
+#}
 
 
 # vim: ai ts=2 sw=2 et sts=2 ft=sh
