@@ -33,13 +33,8 @@ function testShortOpts() {
     "b  version"
   )
 
-  assertEquals "no context"               \
-    "f:q:b"                               \
-    "$(__pgop_short_opts)"
-
-  assertEquals "my_context"               \
-    "f:q:bm"                              \
-    "$(__pgop_short_opts "my_context")"
+  assertEquals "no context"    "f:q:b"   "$(__pgop_short_opts)"
+  assertEquals "my_context"    "f:q:bm"  "$(__pgop_short_opts "my_context")"
 }
 
 function testLongOpts() {
@@ -52,13 +47,8 @@ function testLongOpts() {
     "b  version"
   )
 
-  assertEquals "no context"               \
-    "filters:,output,query:,version"      \
-    "$(__pgop_long_opts)"
-
-  assertEquals "my_context"               \
-    "filters:,output,query:,version,mine" \
-    "$(__pgop_long_opts "my_context")"
+  assertEquals "no context" "filters:,output,query:,version"      "$(__pgop_long_opts)"
+  assertEquals "my_context" "filters:,output,query:,version,mine" "$(__pgop_long_opts "my_context")"
 }
 
 # load and run shUnit2
