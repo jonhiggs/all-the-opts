@@ -51,6 +51,19 @@ function testLongOpts() {
   assertEquals "my_context" "filters:,output,query:,version,mine" "$(__pgop_long_opts "my_context")"
 }
 
+function testShortoptToSwitch() {
+  assertEquals "-x" "$(__pgop_shortopt_to_switch x)"
+  assertEquals "-y" "$(__pgop_shortopt_to_switch y:)"
+  assertEquals "-z" "$(__pgop_shortopt_to_switch z::)"
+}
+
+function testLongoptToSwitch() {
+  assertEquals "--longx" "$(__pgop_longopt_to_switch longx)"
+  assertEquals "--longy" "$(__pgop_longopt_to_switch longy:)"
+  assertEquals "--longz" "$(__pgop_longopt_to_switch longz::)"
+}
+
+
 # load and run shUnit2
 source $(dirname $0)/shunit/src/shunit2
 

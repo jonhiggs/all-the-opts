@@ -50,6 +50,16 @@ __pgop_valid_option() {
   return 1
 }
 
+__pgop_shortopt_to_switch() {
+  # convert a shortopt to the switch
+  echo $1 | sed 's/^/-/g' | sed -E 's/:{1,2}$//g'
+}
+
+__pgop_longopt_to_switch() {
+  # convert a longopt to the switch
+  echo $1 | sed 's/^/--/g' | sed -E 's/:{1,2}$//g'
+}
+
 __pgop_switch_value() {
   # takes a switch and echo 'true', 'false' or the value of the switch.
   # return 0 if switch exists
