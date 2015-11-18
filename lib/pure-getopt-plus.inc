@@ -40,7 +40,14 @@ __pgop_arg_type() {
 __pgop_valid_option() {
   # return true if the switch has been defined either globally, or in the
   # current context.
-  return 0
+  option=$(echo $1 | sed -E 's/^-{1,2}//')
+  shift
+  contexts=$@
+  for o in $(__pgop_options ${contexts}); do
+    echo $o
+    [[ "$o" == ${option} ]] && return 0
+  done
+  return 1
 }
 
 __pgop_switch_value() {

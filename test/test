@@ -16,6 +16,14 @@ function testOptions() {
     "$(__pgop_options "my_context")"
 }
 
+function testValidOption() {
+  assertTrue  "with valid short"   "__pgop_valid_option -g"
+  assertFalse "with invalid short" "__pgop_valid_option -x"
+  assertTrue  "with valid long"    "__pgop_valid_option --global"
+  assertFalse "with invalid long"  "__pgop_valid_option --invalid"
+  assertTrue  "with a context"     "__pgop_valid_option --global my_context"
+}
+
 function testShortOpts() {
   export PGOP_MY_CONTEXT=("m mine")
   export PGOP_GLOBAL=(
@@ -52,13 +60,6 @@ function testLongOpts() {
     "filters:,output,query:,version,mine" \
     "$(__pgop_long_opts "my_context")"
 }
-
-#function testValidOption() {
-#  assertTrue  "with valid short"   '__pgop_valid_option -f'
-#  assertFalse "with invalid short" '__pgop_valid_option -x'
-#  assertTrue  "with valid long"    '__pgop_valid_option --filters'
-#  assertFalse "with invalid long"  '__pgop_valid_option --invalid'
-#}
 
 # load and run shUnit2
 source $(dirname $0)/shunit/src/shunit2
