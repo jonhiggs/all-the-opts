@@ -1,16 +1,42 @@
 source $(dirname ${BASH_SOURCE[0]})/getopt.bash
 
-__pgop_options() {
-  # takes contexts as an arguments
-  # merges global options with contexts and returns a new list
-  for opt in "${PGOP_GLOBAL[@]}"; do
-    echo $opt
-  done
+__pgop_context_var() {
+  # return the variable name for a context
+  echo "PGOP_$(echo $1 | tr '[a-z]' '[A-Z]')"
+}
 
-  for context in $@; do
-    var="PGOP_$(echo $context | tr '[a-z]' '[A-Z]')"
+__pgop_options() {
+  if [[ $# -eq 0 ]]; then
+    contexts="global"
+  else
+    contexts=$@
+  fi
+
+  for context in ${contexts}; do
+    local var=$(__pgop_context_var $context)
     [[ ! -z ${!var} ]] && echo ${!var}
   done
+}
+
+__pgop_options_uniq() {
+  if [[ $# -lt 2 ]]; then
+    echo "needs at least two arguments" 1>&2
+    return 1
+  fi
+
+  context=$1
+  shift
+  for o in $@; do
+    if [[ ${#o} -eq 1 ]]; then
+      # compare against short options
+      count=$(__pgop_options ${context} | awk '{ print $1 }' | grep -c ^${o}$)
+      [[ ${count} -eq 0 ]] || return 1
+    else
+      count=$(__pgop_options ${context} | awk '{ print $2 }' | grep -c ^${o}$)
+      [[ ${count} -eq 0 ]] || return 1
+    fi
+  done
+  return 0
 }
 
 __pgop_short_opts() {
@@ -77,28 +103,11 @@ __pgop_arg_type() {
   return 0                                                  # noarg
 }
 
+__pgop_valid() {
+  getopt -o $(__pgop_short_opts) --long $(__pgop_long_opts) -- $*
+  return $?
+}
 
-#__pgop_switch_value() {
-#  # takes a switch and echo 'true', 'false' or the value of the switch.
-#  # return 0 if switch exists
-#  # return 1 if switch does not exist
-#
-#  argv=$(getopt -o $(__pgop_short_opts) --long $(__pgop_long_opts) -- $*) || return
-#  eval "set -- $argv"
-#  declare a
-#  for a; do
-#    case $a in
-#      "--filters")
-#        echo "switch is $a"
-#        sflags=$2
-#        echo "sflag is $sflags"
-#        shift
-#      ;;
-#      "--version")
-#        echo "bash-my-aws v1.0"
-#      ;;
-#    esac
-#  done
-#}
+
 
 # vim: ft=sh

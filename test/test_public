@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+source $(dirname $0)/../lib/public.inc
+
+function testDescription() {
+  assertEquals "when unset"   ""              "$(pgop_description)"
+  assertTrue   "setting"      "pgop_description 'is_set'"
+  assertEquals "when set"     "is_set"        "$(pgop_description "is_set"; pgop_description)"
+}
+
+function testAdd() {
+  assertEquals "without context"    \
+      "Error: context must be set"  \
+      "$(pgop_add 2>&1)"
+
+  assertEquals "empty global context without options"    \
+      ""  \
+      "$(pgop_add global)"
+
+  assertTrue "adding a global option"    \
+      'pgop_add global s something "this is something"'
+
+  assertEquals "global context with options"    \
+    "n nnn help for n"  \
+    "$(pgop_add global n nnn "help for n"; pgop_add global)"
+
+  assertEquals "adding a duplicate short option"    \
+    "Error: non-unique option"             \
+    "$(pgop_add global n nnn "help for n"; pgop_add global n xxx x 2>&1)"
+
+  #assertTrue   "setting"      "pgop_description 'is_set'"
+  #assertEquals "when set"     "is_set"        "$(pgop_description "is_set"; pgop_description)"
+}
+
+source $(dirname $0)/shunit/src/shunit2
+
+# vim: ft=sh
