@@ -28,19 +28,27 @@ This is a wrapper to make it super easy to parse switches.
     )
 ```
 
+## Provided Functions
+
+- pgop_setup:           do this first (may not be necessary)
+- pgop_set:             set the value of an argument
+- pgop_resources:       the things that are not arguments (what's the real name?)
+- pgop_description:     the description that you have set
+- pgop_add:             add an argument
+- pgop_include_context: include options for an additional context
+
 ## Include in your application
 
 ``` bash
     source ./pure-getopt-plus.inc
-    export PGOP_DESCRIPTION="this is an example application"
-    export PGOP_GLOBAL=(
-        "v  version     Display the version information"
-    )
+    pgop_description "this is an example application"
+    pgop_add global n name    "Set your name"
+    pgop_add global v version "Display the version information"
+    pgop_context_add "global"
 
-    PGOP_CONTEXTS="global"
-    pgop_setup $@
+    pgop_setup $@     # we may be able to get away with not doing this
 
-    pgop_set --name "unnamed"
+    pgop_set --name "the default name"
 
     function version() {
         echo "version 1.0.0"
@@ -55,11 +63,11 @@ This is a wrapper to make it super easy to parse switches.
 
     for arg in ${pgop_options}; do
         case $arg in
-            "-v"|"--version") version ;;
             "-n"|"--name")
                 pgop_set --name $(pgop_value ${arg})
                 name
             ;;
+            "-v"|"--version") version ;;
         esac
     done
 ```
