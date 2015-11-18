@@ -16,10 +16,6 @@ pgop_add() {
   description=$4
 
   case $# in
-    0)
-      pgop_error "context must be set"
-      return 1
-      ;;
     1)
       __pgop_options ${context}
     ;;
@@ -32,6 +28,11 @@ pgop_add() {
       var=$(__pgop_context_var $context)
       eval "$(echo ${var})+=('${short} ${long} ${description}')"
     ;;
+    *)
+      pgop_error "you must provide context, short option, long option and
+        description."
+      return 1
+      ;;
   esac
 
 }

@@ -1,5 +1,6 @@
 pgop_error() {
-  echo "Error: $@" 1>&2
+  message=$(echo $@ | sed -E 's/[\ ]+/ /g')
+  echo "Error: $message" 1>&2
   return 0
 }
 

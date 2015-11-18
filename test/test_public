@@ -9,7 +9,7 @@ function testDescription() {
 
 function testAdd() {
   assertEquals "without context"    \
-      "Error: context must be set"  \
+      "Error: you must provide context, short option, long option and description."  \
       "$(pgop_add 2>&1)"
 
   assertEquals "empty global context without options"    \
