@@ -31,21 +31,26 @@ __pgop_long_opts() {
   echo -n ${opts} | sed 's/,$//g'
 }
 
-__pgop_arg_type() {
-  # 0 is noarg
-  # 1 is optarg
-  # 2 is arg
-}
-
-__pgop_valid_option() {
-  # return true if the switch has been defined either globally, or in the
-  # current context.
-  option=$(echo $1 | sed -E 's/^-{1,2}//')
+__pgop_switch_to_opt() {
+  # return the getopt config for a given switch
+  switch=$1
   shift
   contexts=$@
-  for o in $(__pgop_options ${contexts}); do
-    echo $o
-    [[ "$o" == ${option} ]] && return 0
+
+  IFS=$'\n'
+  for o in $(__pgop_options); do
+    shortopt=$(echo $o | awk '{ print $1 }')
+    longopt=$(echo $o | awk '{ print $2 }')
+
+    if [[ "$(__pgop_shortopt_to_switch ${shortopt})" == "${switch}" ]]; then
+      echo $o
+      return 0
+    fi
+
+    if [[ "$(__pgop_longopt_to_switch ${longopt})" == "${switch}" ]]; then
+      echo $o
+      return 0
+    fi
   done
   return 1
 }
@@ -60,27 +65,40 @@ __pgop_longopt_to_switch() {
   echo $1 | sed 's/^/--/g' | sed -E 's/:{1,2}$//g'
 }
 
-__pgop_switch_value() {
-  # takes a switch and echo 'true', 'false' or the value of the switch.
-  # return 0 if switch exists
-  # return 1 if switch does not exist
-
-  argv=$(getopt -o $(__pgop_short_opts) --long $(__pgop_long_opts) -- $*) || return
-  eval "set -- $argv"
-  declare a
-  for a; do
-    case $a in
-      "--filters")
-        echo "switch is $a"
-        sflags=$2
-        echo "sflag is $sflags"
-        shift
-      ;;
-      "--version")
-        echo "bash-my-aws v1.0"
-      ;;
-    esac
-  done
+__pgop_valid_option() {
+  __pgop_switch_to_opt $@ > /dev/null
+  return $?
 }
+
+__pgop_arg_type() {
+  option=$(__pgop_switch_to_opt $@) || return 255           # invalid
+  echo "${option}" | grep "::$" > /dev/null  && return 2    # optional
+  echo "${option}" | grep ":$" > /dev/null   && return 1    # requrired
+  return 0                                                  # noarg
+}
+
+
+#__pgop_switch_value() {
+#  # takes a switch and echo 'true', 'false' or the value of the switch.
+#  # return 0 if switch exists
+#  # return 1 if switch does not exist
+#
+#  argv=$(getopt -o $(__pgop_short_opts) --long $(__pgop_long_opts) -- $*) || return
+#  eval "set -- $argv"
+#  declare a
+#  for a; do
+#    case $a in
+#      "--filters")
+#        echo "switch is $a"
+#        sflags=$2
+#        echo "sflag is $sflags"
+#        shift
+#      ;;
+#      "--version")
+#        echo "bash-my-aws v1.0"
+#      ;;
+#    esac
+#  done
+#}
 
 # vim: ft=sh

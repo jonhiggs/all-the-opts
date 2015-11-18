@@ -51,6 +51,20 @@ function testLongOpts() {
   assertEquals "my_context" "filters:,output,query:,version,mine" "$(__pgop_long_opts "my_context")"
 }
 
+function testArgType() {
+  export PGOP_GLOBAL=(
+    "- noarg"
+    "- arg:"
+    "- optarg::"
+  )
+
+  assertEquals "with noarg"  0 "$(__pgop_arg_type --noarg;  echo $?)"
+  assertEquals "with arg"    1 "$(__pgop_arg_type --arg;    echo $?)"
+  assertEquals "with optarg" 2 "$(__pgop_arg_type --optarg; echo $?)"
+  assertEquals "with invalid" 255 "$(__pgop_arg_type --invalid; echo $?)"
+}
+
+
 function testShortoptToSwitch() {
   assertEquals "-x" "$(__pgop_shortopt_to_switch x)"
   assertEquals "-y" "$(__pgop_shortopt_to_switch y:)"
