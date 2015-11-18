@@ -1,16 +1,9 @@
 source $(dirname ${BASH_SOURCE[0]})/getopt.bash
 
-PGOP_GLOBAL=(
-  "f filters"
-  "- output"
-  "- query"
-  "- version"
-)
-
 __pgop_short_opts() {
   # merges the options to construct the pure-getops '-o' arguments
   local opts=""
-  for opt in "${GLOBAL_OPTIONS[@]}"; do
+  for opt in "${PGOP_GLOBAL[@]}"; do
     opt=$(echo ${opt} | awk '{print $1}')
     [[ "${opt}" == "-" ]] || opts+=$opt
   done
@@ -27,16 +20,16 @@ __pgop_long_opts() {
   echo ${opts} | sed 's/,$//g'
 }
 
-__pgop_arg_type() {
-  # 0 is noarg
-  # 1 is optarg
-  # 2 is arg
-}
-
-__pgop_switch_valid() {
-  # return true if the switch has been defined either globally, or in the
-  # current context.
-}
+#__pgop_arg_type() {
+#  # 0 is noarg
+#  # 1 is optarg
+#  # 2 is arg
+#}
+#
+#__pgop_switch_valid() {
+#  # return true if the switch has been defined either globally, or in the
+#  # current context.
+#}
 
 __pgop_switch_value() {
   # takes a switch and echo 'true', 'false' or the value of the switch.

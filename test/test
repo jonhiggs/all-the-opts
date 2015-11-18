@@ -1,24 +1,17 @@
 #!/usr/bin/env bash
+source $(dirname $0)/functions.inc
 
-dir=$(dirname $0)
-tmpfile=$(mktemp -t cecho.XXX)
+function testShortOpts() {
+  export PGOP_GLOBAL=(
+    "f: filters:"
+    "-  output"
+    "q: query:"
+    "b  version"
+  )
+  assertEquals "f:q:b" "$(__pgop_short_opts)"
+}
 
-colours=true
-for arg in $@; do
-  [[ "$arg" == "--no256" ]] && colours=false
-done
+# load and run shUnit2
+source $(dirname $0)/shunit/src/shunit2
 
-for test in ${dir}/test_*; do
-  [[ "${test}" =~ test_256$ ]] && ! ${colours} && continue
-
-  echo -n ${test}
-  ./${test} &> ${tmpfile}
-  if [[ $? -eq 0 ]]; then
-    echo " ok"
-  else
-    cat ${tmpfile}
-    exit 1
-  fi
-done
-
-rm $tmpfile
+# vim: ai ts=2 sw=2 et sts=2 ft=sh

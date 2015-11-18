@@ -1,5 +1,13 @@
 function oneTimeSetUp() {
-  echo "one time setup"
+  source $(dirname $0)/../lib/pure-getopt-plus.inc
+
+  export PGOP_GLOBAL=(
+    "f: filters:"
+    "-  output"
+    "q: query:"
+    "b  version"
+  )
+
 }
 
 function oneTimeTearDown() {
