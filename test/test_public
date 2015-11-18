@@ -27,8 +27,9 @@ function testAdd() {
     "Error: non-unique option"             \
     "$(pgop_add global n nnn "help for n"; pgop_add global n xxx x 2>&1)"
 
-  #assertTrue   "setting"      "pgop_description 'is_set'"
-  #assertEquals "when set"     "is_set"        "$(pgop_description "is_set"; pgop_description)"
+  assertEquals "adding a duplicate long option"    \
+    "Error: non-unique option"             \
+    "$(pgop_add global n nnn "help for n"; pgop_add global x nnn x 2>&1)"
 }
 
 source $(dirname $0)/shunit/src/shunit2
