@@ -40,7 +40,7 @@ __pgop_options_uniq() {
   context=$1
   shift
   for o in $@; do
-    [[ -e $(__pgop_option ${context} ${o}) ]] && return 1
+    [[ ! -z "$(__pgop_option ${context} ${o})" ]] && return 1
   done
   return 0
 }
