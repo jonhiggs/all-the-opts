@@ -80,12 +80,14 @@ pgop_read() {
   context=$1
   shift
   options=$@
-
+  found=1
   for option in ${options}; do
     __pgop_option_read                                \
       ${context}                                      \
       $(__pgop_option_position ${context} ${option})
+    [[ $? -eq 0 ]] && found=0
   done
+  return ${found}
 }
 
 # vim: ft=sh
