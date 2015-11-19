@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+source $(dirname $0)/../lib/options.inc
+
+function testOptionPosition() {
+  PGOP_GLOBAL=()
+  PGOP_GLOBAL+=("1 one xxx xxx")
+  PGOP_GLOBAL+=("2 two yyy yyy")
+
+  assertTrue "known option" \
+    "__pgop_option_position global one"
+
+  assertFalse "unknown option" \
+    "__pgop_option_position global unknown"
+
+  assertEquals "position by short" \
+    "0" \
+    "$(__pgop_option_position global 1)"
+
+  assertEquals "position by long" \
+    "0" \
+    "$(__pgop_option_position global one)"
+}
+
+function testOptionRead() {
+  PGOP_GLOBAL=()
+  PGOP_GLOBAL+=("1 one xxx xxx")
+  PGOP_GLOBAL+=("2 two yyy yyy")
+
+  assertEquals "can read existing option" \
+    "1 one xxx xxx" \
+    "$(__pgop_option_read global 0)"
+
+  assertFalse "when option doesn't exist" \
+    "__pgop_option_read global 99"
+
+  assertEquals "can read all existing option" \
+    "2" \
+    $(__pgop_option_read global | wc -l)
+}
+
+function testOptionWrite() {
+  PGOP_GLOBAL=()
+
+  assertEquals "can write to array"            \
+    "a b c d"                                 \
+    "$(__pgop_option_write global 'a b c d' && echo ${PGOP_GLOBAL[0]})"
+
+  assertEquals "can edit array"            \
+    "a a a a"                                 \
+    "$(
+      __pgop_option_write global 'a b c d';
+      __pgop_option_write global 'a a a a' 0;
+      echo ${PGOP_GLOBAL[0]}
+    )"
+}
+
+source $(dirname $0)/shunit/src/shunit2
+
+# vim: ft=sh
