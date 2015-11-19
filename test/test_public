@@ -19,71 +19,71 @@ function testAdd() {
   assertTrue "adding a global option"    \
       'pgop_add global s something "this is something"'
 
-  assertEquals "adding two global options"    \
-      2                                       \
-      $(
-        pgop_add global 1 one "first";
-        pgop_add global 2 two "second";
-        pgop_read global | wc -l
-      )
+  #assertEquals "adding two global options"    \
+  #    2                                       \
+  #    $(
+  #      pgop_add global 1 one "first";
+  #      pgop_add global 2 two "second";
+  #      pgop_read global | wc -l
+  #    )
 
-  assertEquals "global context with options"    \
-    "n nnn aGVscCBmb3Igbgo= -"  \
-    "$(pgop_add global n nnn "help for n"; pgop_add global)"
+  #assertEquals "global context with options"    \
+  #  "n nnn aGVscCBmb3Igbgo= -"  \
+  #  "$(pgop_add global n nnn "help for n"; pgop_add global)"
 
-  assertEquals "adding a duplicate short option"    \
-    "Error: non-unique option"             \
-    "$(pgop_add global n nnn "help for n"; pgop_add global n xxx x 2>&1)"
+  #assertEquals "adding a duplicate short option"    \
+  #  "Error: non-unique option"             \
+  #  "$(pgop_add global n nnn "help for n"; pgop_add global n xxx x 2>&1)"
 
-  assertEquals "adding a duplicate long option"    \
-    "Error: non-unique option"             \
-    "$(pgop_add global n nnn "help for n"; pgop_add global x nnn x 2>&1)"
+  #assertEquals "adding a duplicate long option"    \
+  #  "Error: non-unique option"             \
+  #  "$(pgop_add global n nnn "help for n"; pgop_add global x nnn x 2>&1)"
 
-  assertEquals "adding option with a default value"    \
-    "value"             \
-    "$(pgop_add global n nnn "help for n" "value"; pgop_read global x)"
+  #assertEquals "adding option with a default value"    \
+  #  "value"             \
+  #  "$(pgop_add global n nnn "help for n" "value"; pgop_read global x)"
 }
-
-function testContext() {
-  assertEquals "read the default context"    \
-    "global"                                 \
-    "$(pgop_context)"
-
-  assertEquals "context after adding"        \
-    "$(echo -e "global\nnew_context")"       \
-    "$(pgop_context new_context)"
-}
-
-function testRead() {
-  assertFalse "a non-existant object returns false" \
-    "pgop_read global xyz"
-
-  assertTrue "an existant object returns true"    \
-    "pgop_add global z zzz something; pgop_read global zzz"
-
-  assertTrue "multiple objects returns true"       \
-    "pgop_add global z zzz something; pgop_read global zzz"
-
-  assertTrue "when you have an object, but don't specify which, return true" \
-    "pgop_add global z zzz something; pgop_read global"
-
-  assertEquals "when you have two options, but don't specify which, return 2" \
-    2                                                                         \
-    $(pgop_add global z zzz something; pgop_add global x xxx yyy; pgop_read global | wc -l)
-
-  # mulitple objects
-}
-
-function testSet() {
-  assertFalse "when doesn't exist" 'pgop_set "global" "blah" "value"'
-  assertEquals "when doesn't exist"                             \
-    "Error: the option 'blah' does not exist"                   \
-    "$(pgop_set "global" "blah" "value" 2>&1)"
-
-  assertEquals "can read the value"                             \
-    "value"                   \
-    "$(pgop_add "global" "b" "blah" "desc" "value"; pgop_set global blah)"
-}
+#
+#function testContext() {
+#  assertEquals "read the default context"    \
+#    "global"                                 \
+#    "$(pgop_context)"
+#
+#  assertEquals "context after adding"        \
+#    "$(echo -e "global\nnew_context")"       \
+#    "$(pgop_context new_context)"
+#}
+#
+#function testRead() {
+#  assertFalse "a non-existant object returns false" \
+#    "pgop_read global xyz"
+#
+#  assertTrue "an existant object returns true"    \
+#    "pgop_add global z zzz something; pgop_read global zzz"
+#
+#  assertTrue "multiple objects returns true"       \
+#    "pgop_add global z zzz something; pgop_read global zzz"
+#
+#  assertTrue "when you have an object, but don't specify which, return true" \
+#    "pgop_add global z zzz something; pgop_read global"
+#
+#  assertEquals "when you have two options, but don't specify which, return 2" \
+#    2                                                                         \
+#    $(pgop_add global z zzz something; pgop_add global x xxx yyy; pgop_read global | wc -l)
+#
+#  # mulitple objects
+#}
+#
+#function testSet() {
+#  assertFalse "when doesn't exist" 'pgop_set "global" "blah" "value"'
+#  assertEquals "when doesn't exist"                             \
+#    "Error: the option 'blah' does not exist"                   \
+#    "$(pgop_set "global" "blah" "value" 2>&1)"
+#
+#  assertEquals "can read the value"                             \
+#    "value"                   \
+#    "$(pgop_add "global" "b" "blah" "desc" "value"; pgop_set global blah)"
+#}
 
 
 source $(dirname $0)/shunit/src/shunit2

@@ -81,19 +81,11 @@ pgop_read() {
   shift
   options=$@
 
-  # FIXME: refactor
-  if [[ -z ${options} ]]; then
-    result="$(__pgop_options ${context})"
-  else
-    result="$(__pgop_option ${context} ${options})"
-  fi
-
-  if [[ ! -z ${result} ]]; then
-    echo "${result}"
-    return 0
-  else
-    return 1
-  fi
+  for option in ${options}; do
+    __pgop_option_read                                \
+      ${context}                                      \
+      $(__pgop_option_position ${context} ${option})
+  done
 }
 
 # vim: ft=sh
