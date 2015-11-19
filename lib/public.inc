@@ -77,13 +77,13 @@ pgop_read() {
 
   # FIXME: refactor
   if [[ -z ${options} ]]; then
-    result=$(__pgop_options ${context})
+    result="$(__pgop_options ${context})"
   else
-    result=$(__pgop_option ${context} ${options})
+    result="$(__pgop_option ${context} ${options})"
   fi
 
   if [[ ! -z ${result} ]]; then
-    echo ${result}
+    echo "${result}"
     return 0
   else
     return 1

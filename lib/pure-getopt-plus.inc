@@ -13,8 +13,10 @@ __pgop_options() {
   fi
 
   for context in ${contexts}; do
-    local var=$(__pgop_context_var $context)
-    [[ ! -z ${!var} ]] && echo ${!var}
+    local var="$(__pgop_context_var $context)[@]"
+    for x in "${!var}"; do
+      echo $x
+    done
   done
 }
 
