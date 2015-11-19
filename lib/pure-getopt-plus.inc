@@ -1,10 +1,5 @@
 source $(dirname ${BASH_SOURCE[0]})/getopt.bash
 
-__pgop_context_var() {
-  # return the variable name for a context
-  echo "PGOP_$(echo $1 | tr '[a-z]' '[A-Z]')"
-}
-
 __pgop_options() {
   if [[ $# -eq 0 ]]; then
     contexts="global"

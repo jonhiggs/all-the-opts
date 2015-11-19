@@ -7,21 +7,6 @@ function testDescription() {
   assertEquals "when set"     "is_set"        "$(pgop_description "is_set"; pgop_description)"
 }
 
-function testSet() {
-  assertFalse "when doesn't exist" 'pgop_set "global" "blah" "value"'
-  assertEquals "when doesn't exist"                             \
-    "Error: the option 'blah' does not exist"                   \
-    "$(pgop_set "global" "blah" "value" 2>&1)"
-
-  assertEquals "by short option when exists"                    \
-    "desc"                                                      \
-    "$(pgop_add global x xxx desc; pgop_set "global" "x")"
-
-  assertEquals "by long option when exists"                     \
-    "desc"                                                      \
-    "$(pgop_add global x xxx desc; pgop_set "global" "xxx")"
-}
-
 function testAdd() {
   assertEquals "without context"    \
       "Error: you must provide context, short option, long option, description and optionally a value too."  \
@@ -53,6 +38,10 @@ function testAdd() {
   assertEquals "adding a duplicate long option"    \
     "Error: non-unique option"             \
     "$(pgop_add global n nnn "help for n"; pgop_add global x nnn x 2>&1)"
+
+  assertEquals "adding option with a default value"    \
+    "value"             \
+    "$(pgop_add global n nnn "help for n" "value"; pgop_read global x)"
 }
 
 function testContext() {
@@ -84,6 +73,18 @@ function testRead() {
 
   # mulitple objects
 }
+
+function testSet() {
+  assertFalse "when doesn't exist" 'pgop_set "global" "blah" "value"'
+  assertEquals "when doesn't exist"                             \
+    "Error: the option 'blah' does not exist"                   \
+    "$(pgop_set "global" "blah" "value" 2>&1)"
+
+  assertEquals "can read the value"                             \
+    "value"                   \
+    "$(pgop_add "global" "b" "blah" "desc" "value"; pgop_set global blah)"
+}
+
 
 source $(dirname $0)/shunit/src/shunit2
 

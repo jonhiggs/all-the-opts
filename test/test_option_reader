@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+source $(dirname $0)/../lib/option_reader.inc
+
+PGOP_GLOBAL=()
+PGOP_GLOBAL+=("1 one xxx xxx")
+PGOP_GLOBAL+=("2 two yyy yyy")
+
+function testOptionRead() {
+  assertEquals "can read existing option" \
+    "1 one xxx xxx" \
+    "$(__pgop_option_read global 0)"
+
+  assertFalse "when option doesn't exist" \
+    "__pgop_option_read global 99"
+
+  assertEquals "can read all existing option" \
+    "2" \
+    $(__pgop_option_read global | wc -l)
+}
+
+source $(dirname $0)/shunit/src/shunit2
+
+# vim: ft=sh
