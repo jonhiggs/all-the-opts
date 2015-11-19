@@ -81,12 +81,19 @@ pgop_read() {
   shift
   options=$@
   found=1
-  for option in ${options}; do
-    __pgop_option_read                                \
-      ${context}                                      \
-      $(__pgop_option_position ${context} ${option})
-    [[ $? -eq 0 ]] && found=0
-  done
+  case $# in
+    0) # when no option is asked for
+      __pgop_option_read ${context}
+      ;;
+    *) # when options are asked for
+      for option in ${options}; do
+        __pgop_option_read                                \
+          ${context}                                      \
+          $(__pgop_option_position ${context} ${option})
+        [[ $? -eq 0 ]] && found=0
+      done
+      ;;
+  esac
   return ${found}
 }
 
