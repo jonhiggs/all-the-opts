@@ -23,7 +23,7 @@ __pgop_option_read() {
       var="$(__pgop_option_var ${context})[${position}]"
       [[ -z ${!var} ]] && return 1
       echo ${!var}
-      found=1
+      found=0
     ;;
   esac
   return $found
