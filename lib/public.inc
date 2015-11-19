@@ -57,14 +57,21 @@ pgop_set() {
   # used for setting and showing the value of an option
   context=$1
   option=$2
+  value=$3
   case $# in
     2)
-      result="$(__pgop_option ${context} ${option})"
-      if [[ ! -z ${result} ]]; then
-        echo ${result}
+      encoded_value="$(pgop_read ${context} ${option} | awk '{ print $3 }')"
+      if [[ "${encoded_value}" != "-" ]]; then
+        echo "${encoded_value}" | base64 -D
+        return $?
       else
         return 1
       fi
+      ;;
+    3)
+      encoded_value="$(echo "${value}" | base64)"
+      line="$(pgop_read ${context} ${option} | awk '{$4="'${encoded_value}'"}1')"
+      echo $line
       ;;
     *) pgop_error "need a context and an option" && return 1
   esac
