@@ -8,18 +8,17 @@ function testDescription() {
 }
 
 function testSet() {
-  assertFalse "when doesn't exist" 'pgop_set "global" "blah"'
+  assertFalse "when doesn't exist" 'pgop_set "global" "blah" "value"'
   assertEquals "when doesn't exist"                             \
-    ""                                                          \
-    "$(pgop_set "global" "blah")"
-
+    "Error: the option 'blah' does not exist"                   \
+    "$(pgop_set "global" "blah" "value" 2>&1)"
 
   assertEquals "by short option when exists"                    \
-    "x xxx ZGVzYwo= -"                                          \
+    "desc"                                                      \
     "$(pgop_add global x xxx desc; pgop_set "global" "x")"
 
   assertEquals "by long option when exists"                     \
-    "x xxx ZGVzYwo= -"                                          \
+    "desc"                                                      \
     "$(pgop_add global x xxx desc; pgop_set "global" "xxx")"
 }
 

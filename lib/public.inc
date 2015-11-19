@@ -58,8 +58,9 @@ pgop_set() {
   context=$1
   option=$2
   value=$3
+
   case $# in
-    2)
+    2) # fetching
       encoded_value="$(pgop_read ${context} ${option} | awk '{ print $3 }')"
       if [[ "${encoded_value}" != "-" ]]; then
         echo "${encoded_value}" | base64 -D
@@ -68,7 +69,12 @@ pgop_set() {
         return 1
       fi
       ;;
-    3)
+    3) # setting
+      if ! __pgop_option_exists ${context} ${option}; then
+        pgop_error "the option '${option}' does not exist"
+        return 1
+      fi
+
       encoded_value="$(echo "${value}" | base64)"
       line="$(pgop_read ${context} ${option} | awk '{$4="'${encoded_value}'"}1')"
       echo $line

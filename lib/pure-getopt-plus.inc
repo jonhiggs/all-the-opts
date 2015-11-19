@@ -36,6 +36,11 @@ __pgop_option() {
   return 0
 }
 
+__pgop_option_exists() {
+  [[ ! -z "$(__pgop_option $@)" ]]
+  return $?
+}
+
 __pgop_options_uniq() {
   [[ $# -lt 2 ]] && pgop_error "needs at least two arguments" && return 1
 
