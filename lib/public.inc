@@ -18,20 +18,21 @@ pgop_add() {
   context=$1
   short=$2
   long=$3
-  description=$4
+  description="$(echo $4 | base64)"
+  value=${5:-"-"}
 
   case $# in
     1)
       __pgop_options ${context}
     ;;
-    4)
+    4|5)
       if ! __pgop_options_uniq ${context} ${short} ${long}; then
         pgop_error "non-unique option"
         return 1
       fi
 
       var=$(__pgop_context_var $context)
-      eval "$(echo ${var})+=('${short} ${long} ${description}')"
+      eval "$(echo ${var})+=('${short} ${long} ${description} ${value}')"
     ;;
     *)
       pgop_error "you must provide context, short option, long option and
