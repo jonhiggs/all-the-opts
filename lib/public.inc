@@ -13,35 +13,32 @@ pgop_description() {
 }
 
 pgop_add() {
-  # Add an option to a context. If no option is provided, then the available
-  # options for the context is shown.
+  if [[ $# -ne 4 ]] && [[ $# -ne 5 ]]; then
+    # FIXME: make it a proper usage
+    pgop_error "you must provide context, short option, long option,
+      description and optionally an optarg too"
+    return 1
+  fi
 
   context=$1
   short=$2
   long=$3
-  description="$(echo $4 | base64)"
-  value=${5:-"-"}
+  description=$4
+  optarg=${5:-"-"}
 
-  case $# in
-    1)
-      pgop_read ${context}
-    ;;
-    4|5)
-      if ! __pgop_options_uniq ${context} ${short} ${long}; then
-        pgop_error "non-unique option"
-        return 1
-      fi
-
-      var=$(__pgop_context_var $context)
-      eval "$(echo ${var})+=('${short} ${long} ${description} ${value}')"
-    ;;
-    *)
-      # TODO: change this to standard USAGE
-      pgop_error "you must provide context, short option, long option,
-        description and optionally a value too."
+  for t in short long; do
+    pgop_read ${context} ${!type} &> /dev/null &&
+      pgop_error "${t} option is not unique"
       return 1
-      ;;
-  esac
+  done
+
+  # base64 encode the description and optarg
+  [[ "${description}" == '-' ]] || description="$(echo ${description} | base64)"
+  [[ "${optarg}" == '-' ]]      || optarg="$(echo ${optarg} | base64)"
+
+  data="${short} ${long} ${description} ${optarg}"
+  __pgop_option_write ${context} ${data}
+  return $?
 }
 
 pgop_context() {
