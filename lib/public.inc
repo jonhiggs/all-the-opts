@@ -1,6 +1,8 @@
 source $(dirname ${BASH_SOURCE[0]})/message_renderer.inc
 source $(dirname ${BASH_SOURCE[0]})/pure-getopt-plus.inc
 
+PGOP_CONTEXT=("global")
+
 pgop_description() {
   if [[ -z $1 ]]; then
     echo ${PGOP_DESCRIPTION}
@@ -10,6 +12,9 @@ pgop_description() {
 }
 
 pgop_add() {
+  # Add an option to a context. If no option is provided, then the available
+  # options for the context is shown.
+
   context=$1
   short=$2
   long=$3
@@ -34,7 +39,16 @@ pgop_add() {
       return 1
       ;;
   esac
+}
 
+pgop_context() {
+  # show the current context. Add any arguments into the context.
+  for context in $@; do
+    PGOP_CONTEXT+=($context)
+  done
+  for context in ${PGOP_CONTEXT[@]}; do
+    echo ${context}
+  done
 }
 
 # vim: ft=sh
