@@ -36,6 +36,21 @@ __pgop_option() {
   return 0
 }
 
+__pgop_option_position() {
+  context=$1
+  option=$2
+  str=$(__pgop_option ${context} ${option})
+  n=0
+  IFS=$'\n'
+  for option in $(__pgop_options ${context}); do
+    if [[ "${option}" == "${str}" ]]; then
+      echo $n
+      return 0
+    fi
+    n=$(( $n + 1 ))
+  done
+}
+
 #__pgop_option_description() {
 #  context=$1
 #  name=$2
@@ -53,6 +68,7 @@ __pgop_option_value() {
     return $?
   fi
 }
+
 
 __pgop_option_exists() {
   [[ ! -z "$(__pgop_option $@)" ]]
@@ -139,7 +155,5 @@ __pgop_valid() {
   getopt -o $(__pgop_short_opts) --long $(__pgop_long_opts) -- $*
   return $?
 }
-
-
 
 # vim: ft=sh
