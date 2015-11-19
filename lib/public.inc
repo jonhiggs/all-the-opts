@@ -58,7 +58,14 @@ pgop_set() {
   context=$1
   option=$2
   case $# in
-    2) __pgop_option ${context} ${option} ;;
+    2)
+      result="$(__pgop_option ${context} ${option})"
+      if [[ ! -z ${result} ]]; then
+        echo ${result}
+      else
+        return 1
+      fi
+      ;;
     *) pgop_error "need a context and an option" && return 1
   esac
 }

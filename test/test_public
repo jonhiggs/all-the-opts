@@ -8,9 +8,11 @@ function testDescription() {
 }
 
 function testSet() {
+  assertFalse "when doesn't exist" 'pgop_set "global" "blah"'
   assertEquals "when doesn't exist"                             \
     ""                                                          \
     "$(pgop_set "global" "blah")"
+
 
   assertEquals "by short option when exists"                    \
     "x xxx ZGVzYwo= -"                                          \
