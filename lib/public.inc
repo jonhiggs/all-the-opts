@@ -61,16 +61,15 @@ pgop_set() {
 
   case $# in
     2) # fetching
-      __pgop_option_value ${context} ${option};;
+        __pgop_option_value ${context} ${option}
+      ;;
     3) # setting
-      if ! __pgop_option_exists ${context} ${option}; then
-        pgop_error "the option '${option}' does not exist"
-        return 1
-      fi
-
-      encoded_value="$(echo "${value}" | base64)"
-      line="$(pgop_read ${context} ${option} | awk '{$4="'${encoded_value}'"}1')"
-      echo $line
+        __pgop_option_replace                                 \
+          "${context}"                                        \
+          "${option}"                                         \
+          "$(__pgop_option_description ${context} ${option})" \
+          "${value}"
+        return $?
       ;;
     *) pgop_error "need a context and an option" && return 1
   esac

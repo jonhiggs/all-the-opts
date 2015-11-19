@@ -51,11 +51,33 @@ __pgop_option_position() {
   done
 }
 
-#__pgop_option_description() {
-#  context=$1
-#  name=$2
-#  __pgop_option ${context} ${name} | awk '{ print $4 }' | base64 -D
-#}
+__pgop_option_replace() {
+  [[ $# -ne 4 ]] && pgop_error "you must provide four arguments" && return 1
+  context=$1
+  option=$2
+  if ! __pgop_option_exists ${context} ${option}; then
+    pgop_error "the option '${option}' does not exist"
+    return 1
+  fi
+
+  description="$(echo $3 | base64)"
+  value="$(echo $4 | base64)"
+  position="$(__pgop_option_position ${context} ${option})"
+  line="$(
+    pgop_read ${context} ${option}   |
+      awk '{$3="'${description}'"}1' |
+      awk '{$4="'${value}'"}1'
+  )"
+
+  local var="$(__pgop_context_var ${context})[${position}]"
+  eval "$(echo ${var})='${line}'"
+}
+
+__pgop_option_description() {
+  context=$1
+  name=$2
+  __pgop_option ${context} ${name} | awk '{ print $4 }' | base64 -D
+}
 
 __pgop_option_value() {
   context=$1
