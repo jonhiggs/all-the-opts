@@ -23,7 +23,7 @@ pgop_add() {
 
   case $# in
     1)
-      __pgop_options ${context}
+      pgop_read ${context}
     ;;
     4|5)
       if ! __pgop_options_uniq ${context} ${short} ${long}; then
@@ -68,6 +68,26 @@ pgop_set() {
       ;;
     *) pgop_error "need a context and an option" && return 1
   esac
+}
+
+pgop_read() {
+  context=$1
+  shift
+  options=$@
+
+  # FIXME: refactor
+  if [[ -z ${options} ]]; then
+    result=$(__pgop_options ${context})
+  else
+    result=$(__pgop_option ${context} ${options})
+  fi
+
+  if [[ ! -z ${result} ]]; then
+    echo ${result}
+    return 0
+  else
+    return 1
+  fi
 }
 
 # vim: ft=sh

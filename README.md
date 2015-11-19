@@ -30,10 +30,11 @@ This is a wrapper to make it super easy to parse switches.
 
 ## Provided Functions
 
-- pgop_description:     set or show the description
-- pgop_context:         show set contexts or add a context
 - pgop_add:             context, short, long, description (without last three, show)
-- pgop_set:             set the value of an argument
+- pgop_context:         show set contexts or add a context
+- pgop_description:     set or show the description
+- pgop_read:            read the definition of an option
+- pgop_set:             set or read the value of an argument
 
 - pgop_setup:           do this first (may not be necessary)
 - pgop_resources:       the things that are not arguments (what's the real name?)
