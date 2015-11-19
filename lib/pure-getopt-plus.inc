@@ -18,26 +18,40 @@ __pgop_options() {
   done
 }
 
-__pgop_options_uniq() {
-  if [[ $# -lt 2 ]]; then
-    echo "needs at least two arguments" 1>&2
-    return 1
-  fi
+__pgop_option() {
+  # cherry-pick single options
+  [[ $# -lt 2 ]] && pgop_error "needs at least two arguments" && return 1
 
   context=$1
   shift
   for o in $@; do
     if [[ ${#o} -eq 1 ]]; then
-      # compare against short options
-      count=$(__pgop_options ${context} | awk '{ print $1 }' | grep -c ^${o}$)
-      [[ ${count} -eq 0 ]] || return 1
+      __pgop_options ${context} | grep -E "${o}[\:]{0,2}\ [^\ ]+\ "
     else
-      count=$(__pgop_options ${context} | awk '{ print $2 }' | grep -c ^${o}$)
-      [[ ${count} -eq 0 ]] || return 1
+      __pgop_options ${context} | grep -E "[^\ ]{1,3}\ ${o}[:]{0,2}\ "
     fi
   done
   return 0
 }
+
+__pgop_options_uniq() {
+  [[ $# -lt 2 ]] && pgop_error "needs at least two arguments" && return 1
+
+  context=$1
+  shift
+  for o in $@; do
+    [[ -e $(__pgop_option ${context} ${o}) ]] && return 1
+  done
+  return 0
+}
+
+__pgop_option_type() {
+  option=$(__pgop_switch_to_opt $@) || return 255           # invalid
+  echo "${option}" | grep "::$" > /dev/null  && return 2    # optional
+  echo "${option}" | grep ":$" > /dev/null   && return 1    # requrired
+  return 0                                                  # noarg
+}
+
 
 __pgop_short_opts() {
   # merges the options to construct the pure-getops '-o' arguments
@@ -94,13 +108,6 @@ __pgop_longopt_to_switch() {
 __pgop_valid_option() {
   __pgop_switch_to_opt $@ > /dev/null
   return $?
-}
-
-__pgop_arg_type() {
-  option=$(__pgop_switch_to_opt $@) || return 255           # invalid
-  echo "${option}" | grep "::$" > /dev/null  && return 2    # optional
-  echo "${option}" | grep ":$" > /dev/null   && return 1    # requrired
-  return 0                                                  # noarg
 }
 
 __pgop_valid() {

@@ -35,8 +35,9 @@ pgop_add() {
       eval "$(echo ${var})+=('${short} ${long} ${description} ${value}')"
     ;;
     *)
-      pgop_error "you must provide context, short option, long option and
-        description."
+      # TODO: change this to standard USAGE
+      pgop_error "you must provide context, short option, long option,
+        description and optionally a value too."
       return 1
       ;;
   esac
@@ -50,6 +51,16 @@ pgop_context() {
   for context in ${PGOP_CONTEXT[@]}; do
     echo ${context}
   done
+}
+
+pgop_set() {
+  # used for setting and showing the value of an option
+  context=$1
+  option=$2
+  case $# in
+    2) __pgop_option ${context} ${option} ;;
+    *) pgop_error "need a context and an option" && return 1
+  esac
 }
 
 # vim: ft=sh

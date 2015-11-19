@@ -30,11 +30,13 @@ This is a wrapper to make it super easy to parse switches.
 
 ## Provided Functions
 
-- pgop_setup:           do this first (may not be necessary)
+- pgop_description:     set or show the description
+- pgop_context:         show set contexts or add a context
+- pgop_add:             context, short, long, description (without last three, show)
 - pgop_set:             set the value of an argument
+
+- pgop_setup:           do this first (may not be necessary)
 - pgop_resources:       the things that are not arguments (what's the real name?)
-- pgop_description:     the description that you have set
-- pgop_add:             add an argument
 - pgop_include_context: include options for an additional context
 
 ## Include in your application
