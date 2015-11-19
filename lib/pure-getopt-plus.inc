@@ -36,6 +36,24 @@ __pgop_option() {
   return 0
 }
 
+#__pgop_option_description() {
+#  context=$1
+#  name=$2
+#  __pgop_option ${context} ${name} | awk '{ print $4 }' | base64 -D
+#}
+
+__pgop_option_value() {
+  context=$1
+  option=$2
+  encoded_value="$(__pgop_option ${context} ${option} | awk '{ print $3 }')"
+  if [[ "${encoded_value}" == "-" ]]; then
+    return 1
+  else
+    echo "${encoded_value}" | base64 -D
+    return $?
+  fi
+}
+
 __pgop_option_exists() {
   [[ ! -z "$(__pgop_option $@)" ]]
   return $?
