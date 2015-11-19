@@ -26,6 +26,12 @@ function testOptionRead() {
   PGOP_GLOBAL+=("1 one xxx xxx")
   PGOP_GLOBAL+=("2 two yyy yyy")
 
+  assertTrue "existant position should return true" \
+    "__pgop_option_read global 0"
+
+  assertFalse "non-existant position should return false" \
+    "__pgop_option_read global 999"
+
   assertEquals "can read existing option" \
     "1 one xxx xxx" \
     "$(__pgop_option_read global 0)"
