@@ -21,7 +21,6 @@ function testSet() {
   assertEquals "by long option when exists"                     \
     "x xxx ZGVzYwo= -"                                          \
     "$(pgop_add global x xxx desc; pgop_set "global" "xxx")"
-
 }
 
 function testAdd() {
