@@ -2,7 +2,7 @@
 source $(dirname $0)/../lib/public.inc
 
 function testDescription() {
-  assertEquals "when unset"   ""              "$(pgop_description)"
+  assertEquals "when unset"   0              $(pgop_description | wc -l)
   assertTrue   "setting"      "pgop_description 'is_set'"
   assertEquals "when set"     "is_set"        "$(pgop_description "is_set"; pgop_description)"
 }

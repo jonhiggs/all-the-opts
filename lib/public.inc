@@ -5,7 +5,7 @@ PGOP_CONTEXT=("global")
 PGOP_OPERANDS=()
 
 pgop_description() {
-  if [[ -z $1 ]]; then
+  if [[ -z $1 ]] && [[ ! -z ${PGOP_DESCRIPTION} ]]; then
     echo ${PGOP_DESCRIPTION}
   else
     export PGOP_DESCRIPTION="$@"
