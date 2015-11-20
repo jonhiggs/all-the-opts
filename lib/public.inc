@@ -147,7 +147,7 @@ pgop_argument() {
   case "${value}" in
     "true") return 0 ;;
     "-")    return 1 ;;
-    *)      echo ${value}; return 0 ;;
+    *)      [[ ! -z ${value} ]] && echo ${value}; return 0 ;;
   esac
 }
 
