@@ -1,5 +1,9 @@
 # Pure-Getopt-Plus
 
+Wouldn't it be nice if didn't have to use getopt anymore?
+
+
+
 `pure-getopt` which is designed to make GNU getopt's features available everywhere.
 
 This is a wrapper to make it super easy to parse switches.
@@ -28,16 +32,29 @@ This is a wrapper to make it super easy to parse switches.
     )
 ```
 
-## Provided Functions
+## Terminology
+
+- option
+- option_argument
+- operand
+- context
+- optional_argument
+- required_argument
+- no_argument
+
+
+## Functionality
+
+### pgop_add
+
+
+
 
 - pgop_add:             context, short, long, description (without last three, show)
 - pgop_context:         show set contexts or add a context
 - pgop_description:     set or show the description
-- pgop_read:            read the definition of an option
-- pgop_set:             set or read the value of an argument
 - pgop_operands:        the things that are not arguments (what's the real name?)
-- pgop_argument:        read the value of an argument
-
+- pgop_read:            should read the option argument
 - pgop_setup:           do this first (may not be necessary)
 
 ## Include in your application
