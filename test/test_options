@@ -38,8 +38,12 @@ function testOptionRead() {
   PGOP_GLOBAL+=("2 two yyy yyy")
 
   assertEquals "without a number in the position section" \
-    "USAGE: __pgop_option_read <context> <position>" \
+    "USAGE: __pgop_option_read <context> [position]" \
     "$(__pgop_option_read global abc 2>&1)"
+
+  assertEquals "with no position option return both options" \
+    2 \
+    $(__pgop_option_read global | wc -l)
 
   assertTrue "existant position should return true" \
     "__pgop_option_read global 0"

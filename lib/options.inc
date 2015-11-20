@@ -8,7 +8,11 @@ source $(dirname ${BASH_SOURCE[0]})/message_renderer.inc
 source $(dirname ${BASH_SOURCE[0]})/option_helpers.inc
 
 __pgop_option_read() {
-  [[ ! $2 =~ [0-9]+ ]] && __pgop_usage "<context> <position>" && return 1
+  if [[ ! -z $2 ]] && [[ ! $2 =~ [0-9]+ ]]; then
+    __pgop_usage "<context> [position]"
+    return 1
+  fi
+
   context=$1
   position=$2
   found=1
