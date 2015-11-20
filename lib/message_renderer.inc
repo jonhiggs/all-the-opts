@@ -1,4 +1,4 @@
-pgop_error() {
+__pgop_error() {
   message=$(echo $@ | sed -E 's/[\ ]+/ /g')
   echo "Error: $message" 1>&2
   return 0

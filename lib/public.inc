@@ -15,7 +15,7 @@ pgop_description() {
 pgop_add() {
   if [[ $# -ne 3 ]] && [[ $# -ne 4 ]]; then
     # FIXME: make it a proper usage
-    pgop_error "you must provide short option, long option,
+    __pgop_error "you must provide short option, long option,
       description and optionally an optarg too"
     return 1
   fi
@@ -28,7 +28,7 @@ pgop_add() {
 
   for t in short long; do
     if ( __pgop_option_read ${context} ${!t} &> /dev/null ); then
-      pgop_error "${t} option is not unique"
+      __pgop_error "${t} option is not unique"
       return 1
     fi
   done
@@ -69,7 +69,7 @@ pgop_operands() {
 
 pgop_set() {
   # used for setting optarg
-  [[ $# -ne 2 ]] && pgop_error "need a option and argument" && return 1
+  [[ $# -ne 2 ]] && __pgop_error "need a option and argument" && return 1
 
   context="$(pgop_context)"
   option=$1
@@ -82,7 +82,7 @@ pgop_set() {
 
   data=$(__pgop_option_read ${context} ${option} | awk '{$4="'${optarg}'"}1')
   position=$(__pgop_option_position ${context} ${option})
-  [[ $? -ne 0 ]] && pgop_error "option '${option}' does not exist" && return 1
+  [[ $? -ne 0 ]] && __pgop_error "option '${option}' does not exist" && return 1
   __pgop_option_write "${context}" "${data}" "${position}"
   return $?
 }
