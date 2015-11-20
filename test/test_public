@@ -60,12 +60,13 @@ function testAdd() {
 
   PGOP_GLOBAL=()
   assertTrue "adding a unique option"    \
-      'pgop_add global s something "this is something"'
+      'pgop_add global s something xxx'
 
   #PGOP_GLOBAL=()
+  #PGOP_GLOBAL+=("z zzz something -")
   #assertEquals "content of a unique option"    \
   #    'something' \
-  #    "$(pgop_add global s long desc value; echo ${PGOP_GLOBAL[0]})"
+  #    "${PGOP_GLOBAL[0]}"
 
   #assertEquals "adding two global options"    \
   #    2                                       \

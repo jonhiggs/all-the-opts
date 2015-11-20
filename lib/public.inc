@@ -38,7 +38,7 @@ pgop_add() {
   [[ "${optarg}" == '-' ]]      || optarg="$(echo ${optarg} | base64)"
 
   data="${short} ${long} ${description} ${optarg}"
-  __pgop_option_write ${context} ${data}
+  __pgop_option_write "${context}" "${data}"
   return $?
 }
 
