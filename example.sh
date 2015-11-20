@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 source "$(dirname $0)/lib/pure-getopt-plus.inc"
+context="global"
 
 pgop_description          "This is an example application"
-pgop_add global h  help   "Set your name"
-pgop_add global n: name:  "Set your name"
-pgop_add global v version "Display the version information"
 
-pgop_setup global $@ || exit 1
+#          CONTEXT      SHORT  LONG      DESCRIPTION
+pgop_add   ${context}   h      help      "Set your name"
+pgop_add   ${context}   n:     name:     "Set your name"
+pgop_add   ${context}   v      version   "Display the version information"
 
-echo "operands are:"
-pgop_operands
+pgop_setup ${context} $@ || exit 0
+
+for operand in pgop_operands; do
+  echo "found an operand of ${operand}"
+done
 
 pgop_argument global version && echo "version is set"
 
