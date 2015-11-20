@@ -86,24 +86,18 @@ pgop_set() {
 }
 
 pgop_read() {
+  [[ $# -eq 0 ]] && __pgop_usage "<option>" && return 1
   context="$(pgop_context)"
-  options=$@
-  found=1
-  case $# in
-    0) # when no option is asked for
-      __pgop_option_read ${context}
-      ;;
-    *) # when options are asked for
-      for option in ${options}; do
-        position="$(__pgop_option_position ${context} ${option})"
-        if [[ $? -eq 0 ]]; then
-          __pgop_option_read ${context} ${position}
-          found=0
-        fi
-      done
-      ;;
+  option=$1
+  position=$(__pgop_option_position ${context} ${option})
+  [[ $? -ne 0 ]] && __pgop_error "option '${option}' is invalid" && return 1
+  data=$(__pgop_option_read ${context} ${position})
+  option_argument="$(__pgop_option_read_optarg ${data})"
+  case ${option_argument} in
+    "true") return 0                  ;;
+    "-")    return 1                  ;;
+    *)      echo "${option_argument}" ;;
   esac
-  return ${found}
 }
 
 pgop_help() {
