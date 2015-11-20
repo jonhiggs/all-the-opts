@@ -80,12 +80,12 @@ function testAdd() {
 
 function testContext() {
   unset PGOP_CONTEXT
-  assertEquals "read the default context"    \
-    "global"                                 \
+  assertEquals "read the default context"   \
+    "global"                                \
     "$(pgop_context)"
 
-  assertEquals "context after changing"      \
-    "new_context"       \
+  assertEquals "context after changing"     \
+    "new_context"                           \
     "$(pgop_context new_context)"
 }
 
