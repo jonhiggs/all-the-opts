@@ -44,8 +44,11 @@ pgop_add() {
 
 pgop_context() {
   [[ -z ${PGOP_CONTEXT} ]] && PGOP_CONTEXT="global"
-  [[ ! -z $1 ]]            && PGOP_CONTEXT=$1
-  echo ${PGOP_CONTEXT}
+  if [[ -z $1 ]]; then
+    echo ${PGOP_CONTEXT}
+  else
+    export PGOP_CONTEXT="$1"
+  fi
 }
 
 pgop_operands() {

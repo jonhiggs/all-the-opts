@@ -84,8 +84,8 @@ function testContext() {
     "global"                                \
     "$(pgop_context)"
 
-  assertEquals "context after changing"     \
-    "new_context"                           \
+  assertEquals "don't return context after changing"     \
+    ""                                      \
     "$(pgop_context new_context)"
 }
 

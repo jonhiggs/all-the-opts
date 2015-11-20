@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 source "$(dirname $0)/lib/pure-getopt-plus.inc"
-context="global"
-
+pgop_context "global"
 pgop_description          "This is an example application"
 
 #          CONTEXT      SHORT  LONG      DESCRIPTION
