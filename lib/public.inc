@@ -69,7 +69,7 @@ pgop_set() {
 }
 
 pgop_read() {
-  context=$1
+  context=${1:-"global"}
   shift
   options=$@
   found=1
