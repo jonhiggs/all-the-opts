@@ -48,15 +48,20 @@ __pgop_option_read_short() {
 }
 
 __pgop_option_read_long() {
- echo $1 | awk '{ print $2 }'
+  echo $1 | awk '{ print $2 }'
 }
 
 __pgop_option_read_description() {
- echo $1 | awk '{ print $3 }' | base64 -D
+  echo $1 | awk '{ print $3 }' | base64 -D
 }
 
 __pgop_option_read_optarg() {
- echo $1 | awk '{ print $4 }' | base64 -D
+  data="$(echo $1 | awk '{ print $4 }')"
+  case "${data}" in
+    '-')    return 1                              ;;
+    "true") return 0                              ;;
+    *)      echo ${data} | base64 -D && return 0  ;;
+  esac
 }
 
 # vim: ft=sh

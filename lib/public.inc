@@ -138,4 +138,17 @@ pgop_setup() {
   __pgop_getopt_set_option_arguments ${context} $@
 }
 
+pgop_argument() {
+  context=$1
+  option=$2
+  data="$(pgop_read ${context} ${option})"
+  value="$(__pgop_option_read_optarg "${data}")"
+  [[ $? -ne 0 ]] && return 1
+  case "${value}" in
+    "true") return 0 ;;
+    "-")    return 1 ;;
+    *)      echo ${value}; return 0 ;;
+  esac
+}
+
 # vim: ft=sh

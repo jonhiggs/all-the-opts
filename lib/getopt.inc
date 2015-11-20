@@ -50,6 +50,7 @@ __pgop_getopt_set_option_arguments() {
 
     if [[ "$a" =~ ^- ]]; then
       option="$(echo $a | sed -E 's/^[\-]{1,2}//')"
+      pgop_set ${context} ${option} "true"
     else
       echo "setting ${option} to $a"
       pgop_set ${context} ${option} "$a"
