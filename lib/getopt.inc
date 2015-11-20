@@ -23,6 +23,14 @@ __pgop_getopt_long() {
   echo ${options[@]} | sed 's/\,$//g'
 }
 
+__pgop_getopt_cmd() {
+  context=$1
+  short="$(__pgop_getopt_short ${context})"
+  long="$(__pgop_getopt_long ${context})"
+  operands=$(pgop_operands)
+  echo "getopt -o ${short} --long ${long} -- ${operands}"
+}
+
 #__pgop_getopt_longargs() {
 #}
 

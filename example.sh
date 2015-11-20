@@ -5,6 +5,10 @@ pgop_description          "This is an example application"
 pgop_add global n: name:  "Set your name"
 pgop_add global v version "Display the version information"
 
+
+__pgop_getopt_short
+__pgop_getopt_long
+
 for o in $@; do
   if [[ $o == '--help' ]]; then
     pgop_help global
@@ -12,7 +16,6 @@ for o in $@; do
   fi
 done
 
-#pgop_context_add "global"
 
 #pgop_setup $@     # we may be able to get away with not doing this
 #
