@@ -53,25 +53,19 @@ pgop_context() {
 }
 
 pgop_set() {
-  # used for setting and showing the value of an option
+  # used for setting optarg
+  [[ $# -ne 3 ]]; pgop_error "need a context, option and argument" && return 1
+
   context=$1
   option=$2
-  value=$3
+  arg=$3
 
-  case $# in
-    2) # fetching
-        __pgop_option_value ${context} ${option}
-      ;;
-    3) # setting
-        __pgop_option_replace                                 \
-          "${context}"                                        \
-          "${option}"                                         \
-          "$(__pgop_option_description ${context} ${option})" \
-          "${value}"
-        return $?
-      ;;
-    *) pgop_error "need a context and an option" && return 1
-  esac
+  __pgop_option_replace                                 \
+    "${context}"                                        \
+    "${option}"                                         \
+    "$(__pgop_option_description ${context} ${option})" \
+    "${value}"
+  return $?
 }
 
 pgop_read() {
