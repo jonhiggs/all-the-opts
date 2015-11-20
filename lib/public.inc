@@ -13,21 +13,21 @@ pgop_description() {
 }
 
 pgop_add() {
-  if [[ $# -ne 4 ]] && [[ $# -ne 5 ]]; then
+  if [[ $# -ne 3 ]] && [[ $# -ne 4 ]]; then
     # FIXME: make it a proper usage
-    pgop_error "you must provide context, short option, long option,
+    pgop_error "you must provide short option, long option,
       description and optionally an optarg too"
     return 1
   fi
 
-  context=$1
-  short=$2
-  long=$3
-  description=$4
-  optarg=${5:-"-"}
+  context="$(pgop_context)"
+  short=$1
+  long=$2
+  description=$3
+  optarg=${4:-"-"}
 
   for t in short long; do
-    if ( pgop_read ${context} ${!t} &> /dev/null ); then
+    if ( __pgop_option_read ${context} ${!t} &> /dev/null ); then
       pgop_error "${t} option is not unique"
       return 1
     fi

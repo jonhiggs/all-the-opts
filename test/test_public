@@ -50,32 +50,32 @@ function testRead() {
 
 function testAdd() {
   assertEquals "without enough options"    \
-    "Error: you must provide context, short option, long option, description and optionally an optarg too"  \
-    "$(pgop_add global 2>&1)"
+    "Error: you must provide short option, long option, description and optionally an optarg too"  \
+    "$(pgop_add 2>&1)"
 
   PGOP_GLOBAL=()
   PGOP_GLOBAL+=("z zzz something -")
   assertFalse "adding duplicate short option"    \
-    "pgop_add global z changed changed"
+    "pgop_add z changed changed"
 
   PGOP_GLOBAL=()
   PGOP_GLOBAL+=("z zzz something -")
   assertFalse "adding duplicate long option"    \
-    "pgop_add global c zzz changed"
+    "pgop_add c zzz changed"
 
   PGOP_GLOBAL=()
   assertTrue "adding a unique option"    \
-    'pgop_add global s something xxx'
+    'pgop_add s something xxx'
 
   PGOP_GLOBAL=()
   assertEquals "content of a unique option"    \
     's something eHh4Cg== -' \
-    "$(pgop_add global s something xxx; echo ${PGOP_GLOBAL[0]})"
+    "$(pgop_add s something xxx; echo ${PGOP_GLOBAL[0]})"
 
   PGOP_GLOBAL=()
   assertEquals "content with an optarg"    \
     's something eHh4Cg== b3B0YXJnCg==' \
-    "$(pgop_add global s something xxx optarg; echo ${PGOP_GLOBAL[0]})"
+    "$(pgop_add s something xxx optarg; echo ${PGOP_GLOBAL[0]})"
 }
 
 function testContext() {
