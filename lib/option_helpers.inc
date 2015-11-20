@@ -18,8 +18,8 @@ __pgop_option_position() {
   var="$(__pgop_option_var ${context})[@]"
   IFS=$'\n'
   for data in ${!var}; do
-    short="$(__pgop_option_read_short "${data}")"
-    long="$(__pgop_option_read_long "${data}")"
+    short="$(__pgop_option_read_short "${data}" | tr -d ':')"
+    long="$(__pgop_option_read_long "${data}" | tr -d ':')"
     if [[ "${short}" == "${option}" ]] || [[ "${long}" == "${option}" ]]; then
       echo $n
       return 0

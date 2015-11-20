@@ -19,6 +19,17 @@ function testOptionPosition() {
   assertEquals "position by long" \
     "0" \
     "$(__pgop_option_position global one)"
+
+  PGOP_GLOBAL=()
+  PGOP_GLOBAL+=("1: one: xxx xxx")
+  PGOP_GLOBAL+=("2:: two:: yyy yyy")
+
+  assertTrue "known option with argument" \
+    "__pgop_option_position global one"
+
+  assertTrue "known option with optional argument" \
+    "__pgop_option_position global two"
+
 }
 
 function testOptionRead() {
@@ -42,6 +53,11 @@ function testOptionRead() {
   assertEquals "can read all existing option" \
     "2" \
     $(__pgop_option_read global | wc -l)
+
+  PGOP_GLOBAL=("1: one: xxx xxx")
+  assertEquals "can read existing option with required argument" \
+    "1: one: xxx xxx" \
+    "$(__pgop_option_read global 0)"
 }
 
 function testOptionWrite() {

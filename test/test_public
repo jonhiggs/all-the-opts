@@ -41,6 +41,11 @@ function testRead() {
 
   assertFalse "with multiple object, return false when it doesn't exist"     \
     "pgop_read global zzzz"
+
+  PGOP_GLOBAL=()
+  PGOP_GLOBAL+=("z: zzz: something -")
+  assertTrue "when searching for an argument with a required option"    \
+    "pgop_read global zzz"
 }
 
 function testAdd() {
