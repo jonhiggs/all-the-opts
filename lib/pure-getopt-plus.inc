@@ -31,21 +31,6 @@ __pgop_option() {
   return 0
 }
 
-__pgop_option_position() {
-  context=$1
-  option=$2
-  str=$(__pgop_option ${context} ${option})
-  n=0
-  IFS=$'\n'
-  for option in $(__pgop_options ${context}); do
-    if [[ "${option}" == "${str}" ]]; then
-      echo $n
-      return 0
-    fi
-    n=$(( $n + 1 ))
-  done
-}
-
 __pgop_option_replace() {
   [[ $# -ne 4 ]] && pgop_error "you must provide four arguments" && return 1
   context=$1

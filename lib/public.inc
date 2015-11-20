@@ -27,9 +27,10 @@ pgop_add() {
   optarg=${5:-"-"}
 
   for t in short long; do
-    pgop_read ${context} ${!type} &> /dev/null &&
+    if ( pgop_read ${context} ${!t} &> /dev/null ); then
       pgop_error "${t} option is not unique"
       return 1
+    fi
   done
 
   # base64 encode the description and optarg
@@ -84,10 +85,11 @@ pgop_read() {
       ;;
     *) # when options are asked for
       for option in ${options}; do
-        __pgop_option_read                                \
-          ${context}                                      \
-          $(__pgop_option_position ${context} ${option})
-        [[ $? -eq 0 ]] && found=0
+        position="$(__pgop_option_position ${context} ${option})"
+        if [[ $? -eq 0 ]]; then
+          __pgop_option_read ${context} ${position}
+          found=0
+        fi
       done
       ;;
   esac

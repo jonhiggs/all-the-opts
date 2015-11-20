@@ -30,6 +30,17 @@ function testRead() {
   assertEquals "multiple objects are returned"       \
     2                                                \
     $(pgop_read global | wc -l)
+
+  assertEquals "with multiple objects should be able to return specific"     \
+    "z zzz something -" \
+    "$(pgop_read global z)"
+
+  assertEquals "with multiple object, return nothing when it doesn't exist"     \
+    "" \
+    "$(pgop_read global zzzz)"
+
+  assertFalse "with multiple object, return false when it doesn't exist"     \
+    "pgop_read global zzzz"
 }
 
 function testAdd() {
@@ -47,8 +58,14 @@ function testAdd() {
   assertFalse "adding duplicate long option"    \
       "pgop_add global c zzz changed"
 
-  #assertTrue "adding a global option"    \
-  #    'pgop_add global s something "this is something"'
+  PGOP_GLOBAL=()
+  assertTrue "adding a unique option"    \
+      'pgop_add global s something "this is something"'
+
+  #PGOP_GLOBAL=()
+  #assertEquals "content of a unique option"    \
+  #    'something' \
+  #    "$(pgop_add global s long desc value; echo ${PGOP_GLOBAL[0]})"
 
   #assertEquals "adding two global options"    \
   #    2                                       \
