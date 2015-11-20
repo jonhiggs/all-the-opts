@@ -2,6 +2,7 @@ source $(dirname ${BASH_SOURCE[0]})/message_renderer.inc
 source $(dirname ${BASH_SOURCE[0]})/options.inc
 
 PGOP_CONTEXT=("global")
+PGOP_OPERANDS=()
 
 pgop_description() {
   if [[ -z $1 ]]; then
@@ -49,6 +50,22 @@ pgop_context() {
   for context in ${PGOP_CONTEXT[@]}; do
     echo ${context}
   done
+}
+
+pgop_operands() {
+  # show the current operands Add any arguments into the list.
+  case $# in
+    0)
+      for operand in ${PGOP_OPERANDS[@]}; do
+        echo ${operand}
+      done
+      ;;
+    *)
+      for operand in $@; do
+        PGOP_OPERANDS+=($operand)
+      done
+      ;;
+  esac
 }
 
 pgop_set() {

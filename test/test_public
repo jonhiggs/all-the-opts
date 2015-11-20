@@ -83,6 +83,20 @@ function testContext() {
     "$(pgop_context new_context)"
 }
 
+function testOperands() {
+  assertEquals "read the default operands"   \
+    ""                                 \
+    "$(pgop_operands)"
+
+  assertTrue "adding one operand"    \
+    "pgop_operands one"
+
+  PGOP_OPERANDS=()
+  assertEquals "can read operands"    \
+    "something"                       \
+    "$(pgop_operands something; pgop_operands)"
+}
+
 function testSet() {
   PGOP_GLOBAL=()
   assertFalse "when option doesn't exist" \
