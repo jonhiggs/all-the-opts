@@ -6,7 +6,7 @@ __pgop_getopt_short() {
   options=()
 
   IFS=$'\n'
-  for data in $(pgop_read ${context}); do
+  for data in $(__pgop_option_read ${context}); do
     options+="$(__pgop_option_read_short ${data})"
   done
   echo ${options[@]}
@@ -17,7 +17,7 @@ __pgop_getopt_long() {
   options=()
 
   IFS=$'\n'
-  for data in $(pgop_read ${context}); do
+  for data in $(__pgop_option_read ${context}); do
     options+="$(__pgop_option_read_long ${data}),"
   done
   echo ${options[@]} | sed 's/\,$//g'
