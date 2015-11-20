@@ -139,9 +139,9 @@ pgop_setup() {
 }
 
 pgop_argument() {
-  context=$1
-  option=$2
-  data="$(pgop_read ${context} ${option})"
+  context="$(pgop_context)"
+  option=$1
+  data="$(__pgop_option_read ${context} ${option})"
   value="$(__pgop_option_read_optarg "${data}")"
   [[ $? -ne 0 ]] && return 1
   case "${value}" in

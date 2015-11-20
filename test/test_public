@@ -137,24 +137,24 @@ function testSet() {
 function testArgument() {
   PGOP_GLOBAL=("x xxx something -")
   assertFalse "returns false when value is '-'"                             \
-    "pgop_argument global xxx"
+    "pgop_argument xxx"
 
   assertEquals "print empty string when value is '-'"                             \
     "" \
-    "$(pgop_argument global xxx)"
+    "$(pgop_argument xxx)"
 
   PGOP_GLOBAL=("x xxx something true")
   assertTrue "returns false when value is 'true'"                             \
-    "pgop_argument global xxx"
+    "pgop_argument xxx"
 
   PGOP_GLOBAL=("x xxx something seOEIFJsef==")
   assertTrue "returns true when value is base64"                             \
-    "pgop_argument global xxx"
+    "pgop_argument xxx"
 
   PGOP_GLOBAL=("x xxx something YWJjZAo=")
   assertEquals "prints decoded value it's set"                             \
     "abcd" \
-    "$(pgop_argument global xxx)"
+    "$(pgop_argument xxx)"
 }
 
 source $(dirname $0)/shunit/src/shunit2
