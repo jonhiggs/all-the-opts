@@ -36,6 +36,7 @@ This is a wrapper to make it super easy to parse switches.
 - pgop_read:            read the definition of an option
 - pgop_set:             set or read the value of an argument
 - pgop_operands:        the things that are not arguments (what's the real name?)
+- pgop_argument:        read the value of an argument
 
 - pgop_setup:           do this first (may not be necessary)
 
