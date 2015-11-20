@@ -106,32 +106,32 @@ function testOperands() {
 function testSet() {
   PGOP_GLOBAL=()
   assertFalse "when option doesn't exist" \
-    'pgop_set global blah optarg'
+    'pgop_set blah optarg'
 
   assertEquals "when doesn't exist"                             \
     "Error: option 'blah' does not exist"                   \
-    "$(pgop_set "global" "blah" "value" 2>&1)"
+    "$(pgop_set "blah" "value" 2>&1)"
 
   PGOP_GLOBAL=()
   PGOP_GLOBAL+=("z zzz something -")
   assertTrue "returns true when setting an existing value"                             \
-    "pgop_set global zzz value"
+    "pgop_set zzz value"
 
   assertEquals "value actually gets set"                             \
     "z zzz something dGhpcyBpcyB0aGUgdmFsdWUK" \
-    "$(pgop_set global zzz 'this is the value'; echo ${PGOP_GLOBAL[0]})"
+    "$(pgop_set zzz 'this is the value'; echo ${PGOP_GLOBAL[0]})"
 
   PGOP_GLOBAL=()
   PGOP_GLOBAL+=("z zzz something -")
   assertEquals "value actually gets set"                             \
     "z zzz something true" \
-    "$(pgop_set global zzz true; echo ${PGOP_GLOBAL[0]})"
+    "$(pgop_set zzz true; echo ${PGOP_GLOBAL[0]})"
 
   PGOP_GLOBAL=()
   PGOP_GLOBAL+=("z zzz something true")
   assertEquals "value actually gets set"                             \
     "z zzz something -" \
-    "$(pgop_set global zzz false; echo ${PGOP_GLOBAL[0]})"
+    "$(pgop_set zzz false; echo ${PGOP_GLOBAL[0]})"
 }
 
 function testArgument() {

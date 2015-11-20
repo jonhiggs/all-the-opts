@@ -66,15 +66,15 @@ pgop_operands() {
 
 pgop_set() {
   # used for setting optarg
-  [[ $# -ne 3 ]] && pgop_error "need a context, option and argument" && return 1
+  [[ $# -ne 2 ]] && pgop_error "need a option and argument" && return 1
 
-  context=$1
-  option=$2
+  context="$(pgop_context)"
+  option=$1
 
-  case $3 in
+  case $2 in
     "true")  optarg="true" ;;
     "false") optarg="-"    ;;
-    *)       optarg="$(echo $3 | base64)"
+    *)       optarg="$(echo $2 | base64)"
   esac
 
   data=$(pgop_read $context ${option} | awk '{$4="'${optarg}'"}1')
