@@ -38,7 +38,6 @@ This is a wrapper to make it super easy to parse switches.
 - pgop_operands:       the things that are not arguments (what's the real name?)
 
 - pgop_setup:           do this first (may not be necessary)
-- pgop_include_context: include options for an additional context
 
 ## Include in your application
 
