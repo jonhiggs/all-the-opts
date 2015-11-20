@@ -125,6 +125,7 @@ pgop_help() {
 
 pgop_setup() {
   context=$1
+  shift
   argv="$(eval $(__pgop_getopt_cmd))"
   eval "set -- $argv"
   __pgop_getopt_set_operands $@
