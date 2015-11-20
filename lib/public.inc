@@ -136,6 +136,11 @@ pgop_setup() {
   eval "set -- $argv"
   __pgop_getopt_set_operands $@
   __pgop_getopt_set_option_arguments ${context} $@
+
+  if pgop_argument ${context} help; then
+    pgop_help ${context}
+    return 1
+  fi
 }
 
 pgop_argument() {
