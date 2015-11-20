@@ -104,4 +104,16 @@ pgop_read() {
   return ${found}
 }
 
+pgop_help() {
+  context=$1
+  pgop_description
+  IFS=$'\n'
+  for data in $(pgop_read ${context}); do
+    short="-$(__pgop_option_read_short "${data}")"
+    long="-$(__pgop_option_read_long "${data}")"
+    description="\t$(__pgop_option_read_description "${data}")"
+    echo -e "   ${short} ${long} ${description}"
+  done
+}
+
 # vim: ft=sh
