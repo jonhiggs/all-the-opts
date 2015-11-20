@@ -77,7 +77,7 @@ pgop_set() {
     *)       optarg="$(echo $2 | base64)"
   esac
 
-  data=$(pgop_read $context ${option} | awk '{$4="'${optarg}'"}1')
+  data=$(__pgop_option_read ${context} ${option} | awk '{$4="'${optarg}'"}1')
   position=$(__pgop_option_position ${context} ${option})
   [[ $? -ne 0 ]] && pgop_error "option '${option}' does not exist" && return 1
   __pgop_option_write "${context}" "${data}" "${position}"
