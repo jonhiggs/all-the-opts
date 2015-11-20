@@ -41,7 +41,20 @@ __pgop_getopt_set_operands() {
   done
 }
 
-#__pgop_getopt_longargs() {
-#}
+__pgop_getopt_set_option_arguments() {
+  context=$1
+  shift
+
+  for a in $@; do
+    [[ "$a" == "--" ]] && return 0
+
+    if [[ "$a" =~ ^- ]]; then
+      option="$(echo $a | sed -E 's/^[\-]{1,2}//')"
+    else
+      echo "setting ${option} to $a"
+      pgop_set ${context} ${option} "$a"
+    fi
+  done
+}
 
 # vim: ft=sh

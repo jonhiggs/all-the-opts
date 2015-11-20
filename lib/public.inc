@@ -123,4 +123,12 @@ pgop_help() {
   done
 }
 
+pgop_setup() {
+  context=$1
+  argv="$(eval $(__pgop_getopt_cmd))"
+  eval "set -- $argv"
+  __pgop_getopt_set_operands $@
+  __pgop_getopt_set_option_arguments ${context} $@
+}
+
 # vim: ft=sh
