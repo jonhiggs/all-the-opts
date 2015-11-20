@@ -14,9 +14,7 @@ pgop_description() {
 
 pgop_add() {
   if [[ $# -ne 3 ]] && [[ $# -ne 4 ]]; then
-    # FIXME: make it a proper usage
-    __pgop_error "you must provide short option, long option,
-      description and optionally an optarg too"
+    __pgop_usage "<context> <short_opt> <long_opt> <desription> [option_argument]"
     return 1
   fi
 
@@ -69,7 +67,7 @@ pgop_operands() {
 
 pgop_set() {
   # used for setting optarg
-  [[ $# -ne 2 ]] && __pgop_error "need a option and argument" && return 1
+  [[ $# -ne 2 ]] && __pgop_usage "<option> <option_argument>" && return 1
 
   context="$(pgop_context)"
   option=$1

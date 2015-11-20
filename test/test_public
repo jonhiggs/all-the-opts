@@ -50,7 +50,7 @@ function testRead() {
 
 function testAdd() {
   assertEquals "without enough options"    \
-    "Error: you must provide short option, long option, description and optionally an optarg too"  \
+    "USAGE: pgop_add <context> <short_opt> <long_opt> <desription> [option_argument]"  \
     "$(pgop_add 2>&1)"
 
   PGOP_GLOBAL=()
@@ -108,8 +108,12 @@ function testSet() {
   assertFalse "when option doesn't exist" \
     'pgop_set blah optarg'
 
+  assertEquals "when not enough arguments"                             \
+    "USAGE: pgop_set <option> <option_argument>"                   \
+    "$(pgop_set 2>&1)"
+
   assertEquals "when doesn't exist"                             \
-    "Error: option 'blah' does not exist"                   \
+    "ERROR: option 'blah' does not exist"                   \
     "$(pgop_set "blah" "value" 2>&1)"
 
   PGOP_GLOBAL=()
