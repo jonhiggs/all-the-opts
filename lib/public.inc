@@ -43,13 +43,12 @@ pgop_add() {
 }
 
 pgop_context() {
-  # show the current context. Add any arguments into the context.
-  for context in $@; do
-    PGOP_CONTEXT+=($context)
-  done
-  for context in ${PGOP_CONTEXT[@]}; do
-    echo ${context}
-  done
+  if [[ -z ${PGOP_CONTEXT} ]]; then
+    PGOP_CONTEXT="global"
+  fi
+
+  [[ ! -z $1 ]] && PGOP_CONTEXT=$1
+  echo ${PGOP_CONTEXT}
 }
 
 pgop_operands() {
