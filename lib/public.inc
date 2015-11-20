@@ -85,8 +85,7 @@ pgop_set() {
 }
 
 pgop_read() {
-  context=${1:-"global"}
-  shift
+  context="$(pgop_context)"
   options=$@
   found=1
   case $# in

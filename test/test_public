@@ -10,42 +10,42 @@ function testDescription() {
 function testRead() {
   PGOP_GLOBAL=()
   assertFalse "a non-existant object returns false" \
-    "pgop_read global xyz"
+    "pgop_read xyz"
 
   PGOP_GLOBAL=()
   PGOP_GLOBAL+=("z zzz something -")
   assertTrue "an existant object returns true"    \
-    "pgop_read global zzz"
+    "pgop_read zzz"
 
   assertEquals "returns exitant object"    \
     "z zzz something -" \
-    "$(pgop_read global zzz)"
+    "$(pgop_read zzz)"
 
   PGOP_GLOBAL=()
   PGOP_GLOBAL+=("z zzz something -")
   PGOP_GLOBAL+=("y yyy something_else -")
   assertTrue "multiple objects returns true"       \
-    "pgop_read global"
+    "pgop_read"
 
   assertEquals "multiple objects are returned"       \
     2                                                \
-    $(pgop_read global | wc -l)
+    $(pgop_read | wc -l)
 
   assertEquals "with multiple objects should be able to return specific"     \
     "z zzz something -" \
-    "$(pgop_read global z)"
+    "$(pgop_read z)"
 
   assertEquals "with multiple object, return nothing when it doesn't exist"     \
     "" \
-    "$(pgop_read global zzzz)"
+    "$(pgop_read zzzz)"
 
   assertFalse "with multiple object, return false when it doesn't exist"     \
-    "pgop_read global zzzz"
+    "pgop_read zzzz"
 
   PGOP_GLOBAL=()
   PGOP_GLOBAL+=("z: zzz: something -")
   assertTrue "when searching for an argument with a required option"    \
-    "pgop_read global zzz"
+    "pgop_read zzz"
 }
 
 function testAdd() {
