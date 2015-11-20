@@ -73,27 +73,34 @@ function testAdd() {
     "$(pgop_add global s something xxx optarg; echo ${PGOP_GLOBAL[0]})"
 }
 
-#function testContext() {
-#  assertEquals "read the default context"    \
-#    "global"                                 \
-#    "$(pgop_context)"
-#
-#  assertEquals "context after adding"        \
-#    "$(echo -e "global\nnew_context")"       \
-#    "$(pgop_context new_context)"
-#}
-#
-#function testSet() {
-#  assertFalse "when doesn't exist" 'pgop_set "global" "blah" "value"'
-#  assertEquals "when doesn't exist"                             \
-#    "Error: the option 'blah' does not exist"                   \
-#    "$(pgop_set "global" "blah" "value" 2>&1)"
-#
-#  assertEquals "can read the value"                             \
-#    "value"                   \
-#    "$(pgop_add "global" "b" "blah" "desc" "value"; pgop_set global blah)"
-#}
+function testContext() {
+  assertEquals "read the default context"    \
+    "global"                                 \
+    "$(pgop_context)"
 
+  assertEquals "context after adding"        \
+    "$(echo -e "global\nnew_context")"       \
+    "$(pgop_context new_context)"
+}
+
+function testSet() {
+  PGOP_GLOBAL=()
+  assertFalse "when option doesn't exist" \
+    'pgop_set global blah optarg'
+
+  assertEquals "when doesn't exist"                             \
+    "Error: option 'blah' does not exist"                   \
+    "$(pgop_set "global" "blah" "value" 2>&1)"
+
+  PGOP_GLOBAL=()
+  PGOP_GLOBAL+=("z zzz something -")
+  assertTrue "returns true when setting an existing value"                             \
+    "pgop_set global zzz value"
+
+  assertEquals "value actually gets set"                             \
+    "z zzz something dGhpcyBpcyB0aGUgdmFsdWUK" \
+    "$(pgop_set global zzz 'this is the value'; echo ${PGOP_GLOBAL[0]})"
+}
 
 source $(dirname $0)/shunit/src/shunit2
 
