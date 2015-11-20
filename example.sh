@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 source "$(dirname $0)/lib/pure-getopt-plus.inc"
 
-pgop_description "this is an example application"
-pgop_add global n name    "Set your name"
+pgop_description          "This is an example application"
+pgop_add global n: name:  "Set your name"
 pgop_add global v version "Display the version information"
 
 for o in $@; do
