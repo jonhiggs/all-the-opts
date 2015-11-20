@@ -28,7 +28,17 @@ __pgop_getopt_cmd() {
   short="$(__pgop_getopt_short ${context})"
   long="$(__pgop_getopt_long ${context})"
   operands=$(pgop_operands)
-  echo "getopt -o ${short} --long ${long} -- ${operands}"
+  echo "getopt -o ${short} --long ${long} -- \$@"
+}
+
+__pgop_getopt_set_operands() {
+  local operands=false
+  for a in $@; do
+    [[ "$a" == "--" ]] && local operands=true && continue
+    if $operands; then
+      pgop_operands $a
+    fi
+  done
 }
 
 #__pgop_getopt_longargs() {
