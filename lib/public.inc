@@ -1,6 +1,5 @@
 source $(dirname ${BASH_SOURCE[0]})/message_renderer.inc
 source $(dirname ${BASH_SOURCE[0]})/options.inc
-#source $(dirname ${BASH_SOURCE[0]})/pure-getopt-plus.inc
 
 PGOP_CONTEXT=("global")
 
