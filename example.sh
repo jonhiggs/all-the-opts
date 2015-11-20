@@ -4,11 +4,11 @@ pgop_context "global"
 pgop_description          "This is an example application"
 
 #          CONTEXT      SHORT  LONG      DESCRIPTION
-pgop_add   ${context}   h      help      "Set your name"
-pgop_add   ${context}   n:     name:     "Set your name"
-pgop_add   ${context}   v      version   "Display the version information"
+pgop_add   h      help      "Set your name"
+pgop_add   n:     name:     "Set your name"
+pgop_add   v      version   "Display the version information"
 
-pgop_setup ${context} $@ || exit 0
+pgop_setup $@ || exit 0
 
 for operand in pgop_operands; do
   echo "found an operand of ${operand}"

@@ -109,10 +109,10 @@ pgop_read() {
 }
 
 pgop_help() {
-  context=$1
+  context="$(pgop_context)"
   pgop_description
   IFS=$'\n'
-  for data in $(pgop_read ${context}); do
+  for data in $(__pgop_option_read ${context}); do
     short="-$(__pgop_option_read_short "${data}")"
     long="--$(__pgop_option_read_long "${data}")"
     description="$(__pgop_option_read_description "${data}")"
@@ -128,15 +128,14 @@ pgop_help() {
 }
 
 pgop_setup() {
-  context=$1
-  shift
+  context="$(pgop_context)"
   argv="$(eval $(__pgop_getopt_cmd))"
   eval "set -- $argv"
   __pgop_getopt_set_operands $@
   __pgop_getopt_set_option_arguments ${context} $@
 
   if pgop_argument ${context} help; then
-    pgop_help ${context}
+    pgop_help
     return 1
   fi
 }
