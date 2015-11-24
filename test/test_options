@@ -92,11 +92,22 @@ function testOptionReadOptarg() {
   assertTrue "when value is true" \
     "__ato_option_read_optarg 'a aaa x true'"
 
-  assertFalse "when value is -" \
+  assertTrue "when value is -" \
     "__ato_option_read_optarg 'a aaa x -'"
 
+  assertTrue "when value is base64 encoded" \
+    "__ato_option_read_optarg 'a aaa x aGVsbG8K'"
+
+  assertEquals "when value is true" \
+    "true" \
+    "$(__ato_option_read_optarg 'a aaa x true')"
+
+  assertEquals "when value is -" \
+    "false" \
+    "$(__ato_option_read_optarg 'a aaa x -')"
+
   assertEquals "when value is base64 encoded" \
-    "hello"   \
+    "aGVsbG8K"   \
     "$(__ato_option_read_optarg 'a aaa x aGVsbG8K')"
 }
 
