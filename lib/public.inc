@@ -72,8 +72,10 @@ ato_set() {
   context="$(ato_context)"
   option=$1
 
-  __ato_option_position ${context} ${option} ||
-    __ato_error "option '${option}' does not exist" && return 1
+  if ! __ato_option_exists ${context} ${option}; then
+    __ato_error "option '${option}' does not exist"
+    return 1
+  fi
 
   case $2 in
     "true")  optarg="true" ;;
@@ -81,9 +83,11 @@ ato_set() {
     *)       optarg="$(echo $2 | base64)"
   esac
 
+
   position=$(__ato_option_position ${context} ${option})
   data=$(__ato_option_read ${context} ${position})
-  __ato_option_write "${context}" "${data}" "${position}"
+  new_data=$(echo ${data} | awk -v r="${optarg}" '{$4=r}1')
+  __ato_option_write "${context}" "${new_data}" "${position}"
   return $?
 }
 

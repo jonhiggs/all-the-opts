@@ -32,11 +32,6 @@ function testRead() {
   assertEquals "returns existing value"    \
     "hello" \
     "$(ato_read zzz)"
-
-  ATO_GLOBAL=()
-  ATO_GLOBAL+=("z: zzz: something -")
-  assertTrue "when searching for an argument with a required option"    \
-    "ato_read zzz"
 }
 
 #function testAdd() {
@@ -112,21 +107,21 @@ function testSet() {
   assertTrue "returns true when setting an existing value"                             \
     "ato_set zzz value"
 
-#  assertEquals "value actually gets set"                             \
-#    "z zzz something dGhpcyBpcyB0aGUgdmFsdWUK" \
-#    "$(ato_set zzz 'this is the value'; echo ${ATO_GLOBAL[0]})"
-#
-#  ATO_GLOBAL=()
-#  ATO_GLOBAL+=("z zzz something -")
-#  assertEquals "value actually gets set"                             \
-#    "z zzz something true" \
-#    "$(ato_set zzz true; echo ${ATO_GLOBAL[0]})"
-#
-#  ATO_GLOBAL=()
-#  ATO_GLOBAL+=("z zzz something true")
-#  assertEquals "value actually gets set"                             \
-#    "z zzz something -" \
-#    "$(ato_set zzz false; echo ${ATO_GLOBAL[0]})"
+  assertEquals "value actually gets set"                             \
+    "z zzz something dGhpcyBpcyB0aGUgdmFsdWUK" \
+    "$(ato_set zzz 'this is the value'; echo ${ATO_GLOBAL[0]})"
+
+  ATO_GLOBAL=()
+  ATO_GLOBAL+=("z zzz something -")
+  assertEquals "value actually gets set"                             \
+    "z zzz something true" \
+    "$(ato_set zzz true; echo ${ATO_GLOBAL[0]})"
+
+  ATO_GLOBAL=()
+  ATO_GLOBAL+=("z zzz something true")
+  assertEquals "value actually gets set"                             \
+    "z zzz something -" \
+    "$(ato_set zzz false; echo ${ATO_GLOBAL[0]})"
 }
 
 #function testArgument() {
