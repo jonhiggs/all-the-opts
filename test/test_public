@@ -28,35 +28,15 @@ function testRead() {
   assertTrue "an existant object with a true value"    \
     "ato_read zzz"
 
-  #assertEquals "returns existant object"    \
-  #  "z zzz something -" \
-  #  "$(ato_read zzz)"
+  ATO_GLOBAL=("z zzz something aGVsbG8K")
+  assertEquals "returns existing value"    \
+    "hello" \
+    "$(ato_read zzz)"
 
-  #ATO_GLOBAL=()
-  #ATO_GLOBAL+=("z zzz something -")
-  #ATO_GLOBAL+=("y yyy something_else -")
-  #assertTrue "multiple objects returns true"       \
-  #  "ato_read"
-
-  #assertEquals "multiple objects are returned"       \
-  #  2                                                \
-  #  $(ato_read | wc -l)
-
-  #assertEquals "with multiple objects should be able to return specific"     \
-  #  "z zzz something -" \
-  #  "$(ato_read z)"
-
-  #assertEquals "with multiple object, return nothing when it doesn't exist"     \
-  #  "" \
-  #  "$(ato_read zzzz)"
-
-  #assertFalse "with multiple object, return false when it doesn't exist"     \
-  #  "ato_read zzzz"
-
-  #ATO_GLOBAL=()
-  #ATO_GLOBAL+=("z: zzz: something -")
-  #assertTrue "when searching for an argument with a required option"    \
-  #  "ato_read zzz"
+  ATO_GLOBAL=()
+  ATO_GLOBAL+=("z: zzz: something -")
+  assertTrue "when searching for an argument with a required option"    \
+    "ato_read zzz"
 }
 
 #function testAdd() {
