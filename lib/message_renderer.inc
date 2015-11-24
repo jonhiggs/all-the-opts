@@ -1,10 +1,10 @@
-__pgop_error() {
+__ato_error() {
   message=$(echo $@ | sed -E 's/[\ ]+/ /g')
   echo "ERROR: $message" 1>&2
   return 0
 }
 
-__pgop_usage() {
+__ato_usage() {
   cmd="${FUNCNAME[1]}"
   echo "USAGE: ${cmd} $@" > /dev/stderr
   return 0

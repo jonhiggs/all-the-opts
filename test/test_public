@@ -2,164 +2,175 @@
 source $(dirname $0)/../lib/public.inc
 
 function testDescription() {
-  assertEquals "when unset"   0              $(pgop_description | wc -l)
-  assertTrue   "setting"      "pgop_description 'is_set'"
-  assertEquals "when set"     "is_set"        "$(pgop_description "is_set"; pgop_description)"
+  assertEquals "when unset"   0              $(ato_description | wc -l)
+  assertTrue   "setting"      "ato_description 'is_set'"
+  assertEquals "when set"     "is_set"        "$(ato_description "is_set"; ato_description)"
 }
 
 function testRead() {
-  PGOP_GLOBAL=()
+  ATO_GLOBAL=()
   assertFalse "a non-existant object returns false" \
-    "pgop_read xyz"
+    "ato_read xyz"
 
-  PGOP_GLOBAL=()
-  PGOP_GLOBAL+=("z zzz something -")
-  assertTrue "an existant object returns true"    \
-    "pgop_read zzz"
+  assertEquals "show usage when no option is provided" \
+    "USAGE: ato_read <option>"  \
+    "$(ato_read 2>&1)"
 
-  assertEquals "returns exitant object"    \
-    "z zzz something -" \
-    "$(pgop_read zzz)"
+  assertEquals "a non-existant object displays an error" \
+    "ERROR: option 'xyz' is invalid"  \
+    "$(ato_read xyz 2>&1)"
 
-  PGOP_GLOBAL=()
-  PGOP_GLOBAL+=("z zzz something -")
-  PGOP_GLOBAL+=("y yyy something_else -")
-  assertTrue "multiple objects returns true"       \
-    "pgop_read"
+  ATO_GLOBAL=("z zzz something -")
+  assertFalse "an existant object with a false value"    \
+    "ato_read zzz"
 
-  assertEquals "multiple objects are returned"       \
-    2                                                \
-    $(pgop_read | wc -l)
+  ATO_GLOBAL=("z zzz something true")
+  assertTrue "an existant object with a true value"    \
+    "ato_read zzz"
 
-  assertEquals "with multiple objects should be able to return specific"     \
-    "z zzz something -" \
-    "$(pgop_read z)"
+  #assertEquals "returns existant object"    \
+  #  "z zzz something -" \
+  #  "$(ato_read zzz)"
 
-  assertEquals "with multiple object, return nothing when it doesn't exist"     \
-    "" \
-    "$(pgop_read zzzz)"
+  #ATO_GLOBAL=()
+  #ATO_GLOBAL+=("z zzz something -")
+  #ATO_GLOBAL+=("y yyy something_else -")
+  #assertTrue "multiple objects returns true"       \
+  #  "ato_read"
 
-  assertFalse "with multiple object, return false when it doesn't exist"     \
-    "pgop_read zzzz"
+  #assertEquals "multiple objects are returned"       \
+  #  2                                                \
+  #  $(ato_read | wc -l)
 
-  PGOP_GLOBAL=()
-  PGOP_GLOBAL+=("z: zzz: something -")
-  assertTrue "when searching for an argument with a required option"    \
-    "pgop_read zzz"
+  #assertEquals "with multiple objects should be able to return specific"     \
+  #  "z zzz something -" \
+  #  "$(ato_read z)"
+
+  #assertEquals "with multiple object, return nothing when it doesn't exist"     \
+  #  "" \
+  #  "$(ato_read zzzz)"
+
+  #assertFalse "with multiple object, return false when it doesn't exist"     \
+  #  "ato_read zzzz"
+
+  #ATO_GLOBAL=()
+  #ATO_GLOBAL+=("z: zzz: something -")
+  #assertTrue "when searching for an argument with a required option"    \
+  #  "ato_read zzz"
 }
 
-function testAdd() {
-  assertEquals "without enough options"    \
-    "USAGE: pgop_add <context> <short_opt> <long_opt> <desription> [option_argument]"  \
-    "$(pgop_add 2>&1)"
-
-  PGOP_GLOBAL=()
-  PGOP_GLOBAL+=("z zzz something -")
-  assertFalse "adding duplicate short option"    \
-    "pgop_add z changed changed"
-
-  PGOP_GLOBAL=()
-  PGOP_GLOBAL+=("z zzz something -")
-  assertFalse "adding duplicate long option"    \
-    "pgop_add c zzz changed"
-
-  PGOP_GLOBAL=()
-  assertTrue "adding a unique option"    \
-    'pgop_add s something xxx'
-
-  PGOP_GLOBAL=()
-  assertEquals "content of a unique option"    \
-    's something eHh4Cg== -' \
-    "$(pgop_add s something xxx; echo ${PGOP_GLOBAL[0]})"
-
-  PGOP_GLOBAL=()
-  assertEquals "content with an optarg"    \
-    's something eHh4Cg== b3B0YXJnCg==' \
-    "$(pgop_add s something xxx optarg; echo ${PGOP_GLOBAL[0]})"
-}
-
-function testContext() {
-  unset PGOP_CONTEXT
-  assertEquals "read the default context"   \
-    "global"                                \
-    "$(pgop_context)"
-
-  assertEquals "don't return context after changing"     \
-    ""                                      \
-    "$(pgop_context new_context)"
-}
-
-function testOperands() {
-  assertEquals "read the default operands"   \
-    ""                                 \
-    "$(pgop_operands)"
-
-  assertTrue "adding one operand"    \
-    "pgop_operands one"
-
-  PGOP_OPERANDS=()
-  assertEquals "can read operands"    \
-    "something"                       \
-    "$(pgop_operands something; pgop_operands)"
-}
-
-function testSet() {
-  PGOP_GLOBAL=()
-  assertFalse "when option doesn't exist" \
-    'pgop_set blah optarg'
-
-  assertEquals "when not enough arguments"                             \
-    "USAGE: pgop_set <option> <option_argument>"                   \
-    "$(pgop_set 2>&1)"
-
-  assertEquals "when doesn't exist"                             \
-    "ERROR: option 'blah' does not exist"                   \
-    "$(pgop_set "blah" "value" 2>&1)"
-
-  PGOP_GLOBAL=()
-  PGOP_GLOBAL+=("z zzz something -")
-  assertTrue "returns true when setting an existing value"                             \
-    "pgop_set zzz value"
-
-  assertEquals "value actually gets set"                             \
-    "z zzz something dGhpcyBpcyB0aGUgdmFsdWUK" \
-    "$(pgop_set zzz 'this is the value'; echo ${PGOP_GLOBAL[0]})"
-
-  PGOP_GLOBAL=()
-  PGOP_GLOBAL+=("z zzz something -")
-  assertEquals "value actually gets set"                             \
-    "z zzz something true" \
-    "$(pgop_set zzz true; echo ${PGOP_GLOBAL[0]})"
-
-  PGOP_GLOBAL=()
-  PGOP_GLOBAL+=("z zzz something true")
-  assertEquals "value actually gets set"                             \
-    "z zzz something -" \
-    "$(pgop_set zzz false; echo ${PGOP_GLOBAL[0]})"
-}
-
-function testArgument() {
-  PGOP_GLOBAL=("x xxx something -")
-  assertFalse "returns false when value is '-'"                             \
-    "pgop_argument xxx"
-
-  assertEquals "print empty string when value is '-'"                             \
-    "" \
-    "$(pgop_argument xxx)"
-
-  PGOP_GLOBAL=("x xxx something true")
-  assertTrue "returns false when value is 'true'"                             \
-    "pgop_argument xxx"
-
-  PGOP_GLOBAL=("x xxx something seOEIFJsef==")
-  assertTrue "returns true when value is base64"                             \
-    "pgop_argument xxx"
-
-  PGOP_GLOBAL=("x xxx something YWJjZAo=")
-  assertEquals "prints decoded value it's set"                             \
-    "abcd" \
-    "$(pgop_argument xxx)"
-}
+#function testAdd() {
+#  assertEquals "without enough options"    \
+#    "USAGE: ato_add <context> <short_opt> <long_opt> <desription> [option_argument]"  \
+#    "$(ato_add 2>&1)"
+#
+#  ATO_GLOBAL=()
+#  ATO_GLOBAL+=("z zzz something -")
+#  assertFalse "adding duplicate short option"    \
+#    "ato_add z changed changed"
+#
+#  ATO_GLOBAL=()
+#  ATO_GLOBAL+=("z zzz something -")
+#  assertFalse "adding duplicate long option"    \
+#    "ato_add c zzz changed"
+#
+#  ATO_GLOBAL=()
+#  assertTrue "adding a unique option"    \
+#    'ato_add s something xxx'
+#
+#  ATO_GLOBAL=()
+#  assertEquals "content of a unique option"    \
+#    's something eHh4Cg== -' \
+#    "$(ato_add s something xxx; echo ${ATO_GLOBAL[0]})"
+#
+#  ATO_GLOBAL=()
+#  assertEquals "content with an optarg"    \
+#    's something eHh4Cg== b3B0YXJnCg==' \
+#    "$(ato_add s something xxx optarg; echo ${ATO_GLOBAL[0]})"
+#}
+#
+#function testContext() {
+#  unset ATO_CONTEXT
+#  assertEquals "read the default context"   \
+#    "global"                                \
+#    "$(ato_context)"
+#
+#  assertEquals "don't return context after changing"     \
+#    ""                                      \
+#    "$(ato_context new_context)"
+#}
+#
+#function testOperands() {
+#  assertEquals "read the default operands"   \
+#    ""                                 \
+#    "$(ato_operands)"
+#
+#  assertTrue "adding one operand"    \
+#    "ato_operands one"
+#
+#  ATO_OPERANDS=()
+#  assertEquals "can read operands"    \
+#    "something"                       \
+#    "$(ato_operands something; ato_operands)"
+#}
+#
+#function testSet() {
+#  ATO_GLOBAL=()
+#  assertFalse "when option doesn't exist" \
+#    'ato_set blah optarg'
+#
+#  assertEquals "when not enough arguments"                             \
+#    "USAGE: ato_set <option> <option_argument>"                   \
+#    "$(ato_set 2>&1)"
+#
+#  assertEquals "when doesn't exist"                             \
+#    "ERROR: option 'blah' does not exist"                   \
+#    "$(ato_set "blah" "value" 2>&1)"
+#
+#  ATO_GLOBAL=()
+#  ATO_GLOBAL+=("z zzz something -")
+#  assertTrue "returns true when setting an existing value"                             \
+#    "ato_set zzz value"
+#
+#  assertEquals "value actually gets set"                             \
+#    "z zzz something dGhpcyBpcyB0aGUgdmFsdWUK" \
+#    "$(ato_set zzz 'this is the value'; echo ${ATO_GLOBAL[0]})"
+#
+#  ATO_GLOBAL=()
+#  ATO_GLOBAL+=("z zzz something -")
+#  assertEquals "value actually gets set"                             \
+#    "z zzz something true" \
+#    "$(ato_set zzz true; echo ${ATO_GLOBAL[0]})"
+#
+#  ATO_GLOBAL=()
+#  ATO_GLOBAL+=("z zzz something true")
+#  assertEquals "value actually gets set"                             \
+#    "z zzz something -" \
+#    "$(ato_set zzz false; echo ${ATO_GLOBAL[0]})"
+#}
+#
+#function testArgument() {
+#  ATO_GLOBAL=("x xxx something -")
+#  assertFalse "returns false when value is '-'"                             \
+#    "ato_argument xxx"
+#
+#  assertEquals "print empty string when value is '-'"                             \
+#    "" \
+#    "$(ato_argument xxx)"
+#
+#  ATO_GLOBAL=("x xxx something true")
+#  assertTrue "returns false when value is 'true'"                             \
+#    "ato_argument xxx"
+#
+#  ATO_GLOBAL=("x xxx something seOEIFJsef==")
+#  assertTrue "returns true when value is base64"                             \
+#    "ato_argument xxx"
+#
+#  ATO_GLOBAL=("x xxx something YWJjZAo=")
+#  assertEquals "prints decoded value it's set"                             \
+#    "abcd" \
+#    "$(ato_argument xxx)"
+#}
 
 source $(dirname $0)/shunit/src/shunit2
 

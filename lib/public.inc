@@ -1,32 +1,32 @@
 source $(dirname ${BASH_SOURCE[0]})/message_renderer.inc
 source $(dirname ${BASH_SOURCE[0]})/options.inc
 
-PGOP_CONTEXT=("global")
-PGOP_OPERANDS=()
+ATO_CONTEXT=("global")
+ATO_OPERANDS=()
 
-pgop_description() {
-  if [[ -z $1 ]] && [[ ! -z ${PGOP_DESCRIPTION} ]]; then
-    echo ${PGOP_DESCRIPTION}
+ato_description() {
+  if [[ -z $1 ]] && [[ ! -z ${ATO_DESCRIPTION} ]]; then
+    echo ${ATO_DESCRIPTION}
   else
-    export PGOP_DESCRIPTION="$@"
+    export ATO_DESCRIPTION="$@"
   fi
 }
 
-pgop_add() {
+ato_add() {
   if [[ $# -ne 3 ]] && [[ $# -ne 4 ]]; then
-    __pgop_usage "<context> <short_opt> <long_opt> <desription> [option_argument]"
+    __ato_usage "<context> <short_opt> <long_opt> <desription> [option_argument]"
     return 1
   fi
 
-  context="$(pgop_context)"
+  context="$(ato_context)"
   short=$1
   long=$2
   description=$3
   optarg=${4:-"-"}
 
   for t in short long; do
-    if ( __pgop_option_read ${context} ${!t} &> /dev/null ); then
-      __pgop_error "${t} option is not unique"
+    if ( __ato_option_read ${context} ${!t} &> /dev/null ); then
+      __ato_error "${t} option is not unique"
       return 1
     fi
   done
@@ -36,40 +36,40 @@ pgop_add() {
   [[ "${optarg}" == '-' ]]      || optarg="$(echo ${optarg} | base64)"
 
   data="${short} ${long} ${description} ${optarg}"
-  __pgop_option_write "${context}" "${data}"
+  __ato_option_write "${context}" "${data}"
   return $?
 }
 
-pgop_context() {
-  [[ -z ${PGOP_CONTEXT} ]] && PGOP_CONTEXT="global"
+ato_context() {
+  [[ -z ${ATO_CONTEXT} ]] && ATO_CONTEXT="global"
   if [[ -z $1 ]]; then
-    echo ${PGOP_CONTEXT}
+    echo "${ATO_CONTEXT}"
   else
-    export PGOP_CONTEXT="$1"
+    export ATO_CONTEXT="$1"
   fi
 }
 
-pgop_operands() {
+ato_operands() {
   # show the current operands Add any arguments into the list.
   case $# in
     0)
-      for operand in ${PGOP_OPERANDS[@]}; do
+      for operand in ${ATO_OPERANDS[@]}; do
         echo ${operand}
       done
       ;;
     *)
       for operand in $@; do
-        PGOP_OPERANDS+=($operand)
+        ATO_OPERANDS+=($operand)
       done
       ;;
   esac
 }
 
-pgop_set() {
+ato_set() {
   # used for setting optarg
-  [[ $# -ne 2 ]] && __pgop_usage "<option> <option_argument>" && return 1
+  [[ $# -ne 2 ]] && __ato_usage "<option> <option_argument>" && return 1
 
-  context="$(pgop_context)"
+  context="$(ato_context)"
   option=$1
 
   case $2 in
@@ -78,36 +78,36 @@ pgop_set() {
     *)       optarg="$(echo $2 | base64)"
   esac
 
-  data=$(__pgop_option_read ${context} ${option} | awk '{$4="'${optarg}'"}1')
-  position=$(__pgop_option_position ${context} ${option})
-  [[ $? -ne 0 ]] && __pgop_error "option '${option}' does not exist" && return 1
-  __pgop_option_write "${context}" "${data}" "${position}"
+  data=$(__ato_option_read ${context} ${option} | awk '{$4="'${optarg}'"}1')
+  position=$(__ato_option_position ${context} ${option})
+  [[ $? -ne 0 ]] && __ato_error "option '${option}' does not exist" && return 1
+  __ato_option_write "${context}" "${data}" "${position}"
   return $?
 }
 
-pgop_read() {
-  [[ $# -eq 0 ]] && __pgop_usage "<option>" && return 1
-  context="$(pgop_context)"
+ato_read() {
+  [[ $# -eq 0 ]] && __ato_usage "<option>" && return 1
+  context="$(ato_context)"
   option=$1
-  position=$(__pgop_option_position ${context} ${option})
-  [[ $? -ne 0 ]] && __pgop_error "option '${option}' is invalid" && return 1
-  data=$(__pgop_option_read ${context} ${position})
-  option_argument="$(__pgop_option_read_optarg ${data})"
+  position=$(__ato_option_position ${context} ${option})
+  [[ $? -ne 0 ]] && __ato_error "option '${option}' is invalid" && return 1
+  data=$(__ato_option_read ${context} ${position})
+  [[ $? -ne 1 ]] && return 1
+  option_argument="$(__ato_option_read_optarg "${data}")"
   case ${option_argument} in
     "true") return 0                  ;;
-    "-")    return 1                  ;;
     *)      echo "${option_argument}" ;;
   esac
 }
 
-pgop_help() {
-  context="$(pgop_context)"
-  pgop_description
+ato_help() {
+  context="$(ato_context)"
+  ato_description
   IFS=$'\n'
-  for data in $(__pgop_option_read ${context}); do
-    short="-$(__pgop_option_read_short "${data}")"
-    long="--$(__pgop_option_read_long "${data}")"
-    description="$(__pgop_option_read_description "${data}")"
+  for data in $(__ato_option_read ${context}); do
+    short="-$(__ato_option_read_short "${data}")"
+    long="--$(__ato_option_read_long "${data}")"
+    description="$(__ato_option_read_description "${data}")"
 
     if [[ ${#long} -gt 8 ]]; then
       description="\t${description}"
@@ -119,24 +119,24 @@ pgop_help() {
   done
 }
 
-pgop_setup() {
-  context="$(pgop_context)"
-  argv="$(eval $(__pgop_getopt_cmd))"
+ato_setup() {
+  context="$(ato_context)"
+  argv="$(eval $(__ato_getopt_cmd))"
   eval "set -- $argv"
-  __pgop_getopt_set_operands $@
-  __pgop_getopt_set_option_arguments ${context} $@
+  __ato_getopt_set_operands $@
+  __ato_getopt_set_option_arguments ${context} $@
 
-  if pgop_argument ${context} help; then
-    pgop_help
+  if ato_argument ${context} help; then
+    ato_help
     return 1
   fi
 }
 
-pgop_argument() {
-  context="$(pgop_context)"
+ato_argument() {
+  context="$(ato_context)"
   option=$1
-  data="$(__pgop_option_read ${context} ${option})"
-  value="$(__pgop_option_read_optarg "${data}")"
+  data="$(__ato_option_read ${context} ${option})"
+  value="$(__ato_option_read_optarg "${data}")"
   [[ $? -ne 0 ]] && return 1
   case "${value}" in
     "true") return 0 ;;

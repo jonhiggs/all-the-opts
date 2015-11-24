@@ -2,62 +2,62 @@
 source $(dirname $0)/../lib/getopt.inc
 
 function testGetoptShort() {
-  PGOP_GLOBAL=()
-  assertEquals "when nothing is set" "" "$(__pgop_getopt_short global)"
+  ATO_GLOBAL=()
+  assertEquals "when nothing is set" "" "$(__ato_getopt_short global)"
 
-  PGOP_GLOBAL=("1 one x x")
-  assertEquals "no argument" "1" "$(__pgop_getopt_short global)"
+  ATO_GLOBAL=("1 one x x")
+  assertEquals "no argument" "1" "$(__ato_getopt_short global)"
 
-  PGOP_GLOBAL=("1: one: x x")
-  assertEquals "required argument" "1:" "$(__pgop_getopt_short global)"
+  ATO_GLOBAL=("1: one: x x")
+  assertEquals "required argument" "1:" "$(__ato_getopt_short global)"
 
-  PGOP_GLOBAL=("1:: one:: x x")
-  assertEquals "optional argument" "1::" "$(__pgop_getopt_short global)"
+  ATO_GLOBAL=("1:: one:: x x")
+  assertEquals "optional argument" "1::" "$(__ato_getopt_short global)"
 
   # multiple arguments
-  PGOP_GLOBAL=()
-  PGOP_GLOBAL+=("1   one x x")
-  PGOP_GLOBAL+=("2:  two: x x")
-  PGOP_GLOBAL+=("3:: three:: x x")
-  assertEquals "complex argument" "12:3::" "$(__pgop_getopt_short global)"
+  ATO_GLOBAL=()
+  ATO_GLOBAL+=("1   one x x")
+  ATO_GLOBAL+=("2:  two: x x")
+  ATO_GLOBAL+=("3:: three:: x x")
+  assertEquals "complex argument" "12:3::" "$(__ato_getopt_short global)"
 }
 
 function testGetoptLong() {
-  PGOP_GLOBAL=()
-  assertEquals "when nothing is set" "" "$(__pgop_getopt_long global)"
+  ATO_GLOBAL=()
+  assertEquals "when nothing is set" "" "$(__ato_getopt_long global)"
 
-  PGOP_GLOBAL=("1 one x x")
-  assertEquals "no argument" "one" "$(__pgop_getopt_long global)"
+  ATO_GLOBAL=("1 one x x")
+  assertEquals "no argument" "one" "$(__ato_getopt_long global)"
 
-  PGOP_GLOBAL=("1: one: x x")
-  assertEquals "required argument" "one:" "$(__pgop_getopt_long global)"
+  ATO_GLOBAL=("1: one: x x")
+  assertEquals "required argument" "one:" "$(__ato_getopt_long global)"
 
-  PGOP_GLOBAL=("1:: one:: x x")
-  assertEquals "optional argument" "one::" "$(__pgop_getopt_long global)"
+  ATO_GLOBAL=("1:: one:: x x")
+  assertEquals "optional argument" "one::" "$(__ato_getopt_long global)"
 
   # multiple arguments
-  PGOP_GLOBAL=()
-  PGOP_GLOBAL+=("1   one x x")
-  PGOP_GLOBAL+=("2:  two: x x")
-  PGOP_GLOBAL+=("3:: three:: x x")
-  assertEquals "complex argument" "one,two:,three::" "$(__pgop_getopt_long global)"
+  ATO_GLOBAL=()
+  ATO_GLOBAL+=("1   one x x")
+  ATO_GLOBAL+=("2:  two: x x")
+  ATO_GLOBAL+=("3:: three:: x x")
+  assertEquals "complex argument" "one,two:,three::" "$(__ato_getopt_long global)"
 }
 
 function testGetoptSetOperands() {
-  PGOP_OPERANDS=()
+  ATO_OPERANDS=()
   assertEquals "with no operands" \
     0                             \
-    "$(__pgop_getopt_set_operands '--name' 'hello' '--'; echo ${#PGOP_OPERANDS[@]})"
+    "$(__ato_getopt_set_operands '--name' 'hello' '--'; echo ${#ATO_OPERANDS[@]})"
 
-  PGOP_OPERANDS=()
+  ATO_OPERANDS=()
   assertEquals "with one operand" \
     1                             \
-    "$(__pgop_getopt_set_operands '--name' 'hello' '--' 'first'; echo ${#PGOP_OPERANDS[@]})"
+    "$(__ato_getopt_set_operands '--name' 'hello' '--' 'first'; echo ${#ATO_OPERANDS[@]})"
 
-  PGOP_OPERANDS=()
+  ATO_OPERANDS=()
   assertEquals "with two operands" \
     2                             \
-    "$(__pgop_getopt_set_operands '--name' 'hello' '--' 'first' 'second'; echo ${#PGOP_OPERANDS[@]})"
+    "$(__ato_getopt_set_operands '--name' 'hello' '--' 'first' 'second'; echo ${#ATO_OPERANDS[@]})"
 }
 
 source $(dirname $0)/shunit/src/shunit2
