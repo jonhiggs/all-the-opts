@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "$(dirname $0)/lib/pure-getopt-plus.inc"
+source "$(dirname $0)/lib/all-the-opts.inc"
 pgop_context "global"
 pgop_description          "This is an example application"
 

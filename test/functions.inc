@@ -1,5 +1,5 @@
 function oneTimeSetUp() {
-  source $(dirname $0)/../lib/pure-getopt-plus.inc
+  source $(dirname $0)/../lib/all-the-opts.inc
 }
 
 #function oneTimeTearDown() {
