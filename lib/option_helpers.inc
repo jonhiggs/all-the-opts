@@ -30,5 +30,11 @@ __ato_option_position() {
   return 1
 }
 
+__ato_option_exists() {
+  [[ $# -ne 2 ]] && __ato_usage "<context> <option>" && return 1
+  __ato_option_position $1 $2 &> /dev/null
+  return $?
+}
+
 
 # vim: ft=sh
