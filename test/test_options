@@ -71,13 +71,21 @@ function testOptionWrite() {
     "a b c d"                                 \
     "$(__ato_option_write global 'a b c d' && echo ${ATO_GLOBAL[0]})"
 
+  ATO_GLOBAL=("x y z a")
+  ATO_GLOBAL+=("a b c d")
   assertEquals "can edit array"            \
     "a a a a"                                 \
     "$(
       __ato_option_write global 'a b c d';
-      __ato_option_write global 'a a a a' 0;
-      echo ${ATO_GLOBAL[0]}
+      __ato_option_write global 'a a a a' 1;
+      echo ${ATO_GLOBAL[1]}
     )"
+
+  assertTrue "when writing valid data" \
+    "__ato_option_write global '1 2 3 4'"
+
+  assertFalse "when writing invalid data" \
+    "__ato_option_write global"
 }
 
 source $(dirname $0)/shunit/src/shunit2
