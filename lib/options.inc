@@ -36,14 +36,17 @@ __ato_option_read() {
 }
 
 __ato_option_write() {
-  context=$1
-  data=$2
-  var="$(__ato_option_var ${context})"
-
-  if [[ -z ${3} ]]; then
-    position="$(__ato_option_var_size ${context})"
+  if [[ $# -ne 2 ]] && [[ $# -ne 3 ]]; then
+    __ato_usage "<context> <data> [position]"
+    return 1
   fi
 
+  context=$1
+  data=$2
+  position="${3:-$(__ato_option_var_size ${context})}"
+  var="$(__ato_option_var ${context})"
+
+  # save to the correct array element
   save_point="$(__ato_option_var ${context})[${position}]"
   eval "$(echo ${save_point})='${data}'"
   return 0
