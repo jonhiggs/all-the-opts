@@ -102,11 +102,11 @@ ato_read() {
   fi
   data=$(__ato_option_read ${context} ${position} || return 1)
   option_argument="$(__ato_option_read_optarg "${data}")"
-  [[ $? -eq 0 ]] || return 1
 
   case ${option_argument} in
-    "true") return 0                  ;;
-    *)      echo "${option_argument}" ;;
+    "true")  return 0                              ;;
+    "false") return 1                              ;;
+    *)       echo "${option_argument}" | base64 -D ;;
   esac
   return 0
 }
