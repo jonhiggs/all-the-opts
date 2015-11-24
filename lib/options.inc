@@ -65,11 +65,11 @@ __ato_option_read_description() {
 }
 
 __ato_option_read_optarg() {
-  data="$(echo $1 | awk '{ print $4 }')"
-  case "${data}" in
+  value="$(echo $1 | awk '{ print $4 }')"
+  case "${value}" in
     '-')    return 1                              ;;
     "true") return 0                              ;;
-    *)      echo ${data} | base64 -D && return 0  ;;
+    *)      echo ${value} | base64 -D && return 0  ;;
   esac
 }
 

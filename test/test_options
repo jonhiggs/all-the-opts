@@ -88,6 +88,18 @@ function testOptionWrite() {
     "__ato_option_write global"
 }
 
+function testOptionReadOptarg() {
+  assertTrue "when value is true" \
+    "__ato_option_read_optarg 'a aaa x true'"
+
+  assertFalse "when value is -" \
+    "__ato_option_read_optarg 'a aaa x -'"
+
+  assertEquals "when value is base64 encoded" \
+    "hello"   \
+    "$(__ato_option_read_optarg 'a aaa x aGVsbG8K')"
+}
+
 source $(dirname $0)/shunit/src/shunit2
 
 # vim: ft=sh
