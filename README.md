@@ -1,6 +1,6 @@
 # All The Opts
 
-Wouldn't it be nice if didn't have to use getopt anymore?
+**Wouldn't it be nice if didn't have to use `getopt` anymore? Well this still a work in progress so come back later and maybe your wish will come true...**
 
 `pure-getopt` which is designed to make GNU getopt's features available everywhere.
 
@@ -33,7 +33,7 @@ TODO: Write a glossary of terms
 - ato_help:            generate a help message
 - ato_operands:        the things that are not arguments (what's the real name?)
 - ato_read:            should read the option argument
-- ato_setup:           do this first (may not be necessary)
+- ato_setup:           do this first
 - ato_options:         a list of the 'true' options
 
 ## A Usage Example
