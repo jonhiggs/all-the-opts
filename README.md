@@ -11,26 +11,10 @@ This is a wrapper to make it super easy to parse switches.
 - simple access to switch values
 - context aware arguments
 
-## Define the application description
 
-`${ATO_DESCRIPTION}` contains a short description of the application. It is used at the beginning of the `--help` messages.
+## Glossary
 
-
-## Define the global switches
-
-`${ATO_GLOBAL}` contains the switches that are to be accepted in all contexts. It contains three sections.
-
-- short argument (getopt style)
-- long argument (getopt style)
-- help message (a short string)
-
-``` bash
-    export ATO_GLOBAL=(
-        "v  version     Display the version information"
-    )
-```
-
-## Terminology
+TODO: Write a glossary of terms
 
 - option
 - option_argument
@@ -43,11 +27,6 @@ This is a wrapper to make it super easy to parse switches.
 
 ## Functionality
 
-### ato_add
-
-
-
-
 - ato_add:             context, short, long, description (without last three, show)
 - ato_context:         show set contexts or add a context
 - ato_description:     set or show the description
@@ -55,19 +34,23 @@ This is a wrapper to make it super easy to parse switches.
 - ato_operands:        the things that are not arguments (what's the real name?)
 - ato_read:            should read the option argument
 - ato_setup:           do this first (may not be necessary)
+- ato_options:         a list of the known options
 
-## Include in your application
+## A Usage Example
 
 ``` bash
+    #!/usr/bin/env bash
     source ./all-the-opts.inc
-    ato_description "this is an example application"
+
+    ato_description          "this is an example application"
+    ato_context_add          "global"
+
     ato_add global n name    "Set your name"
     ato_add global v version "Display the version information"
-    ato_context_add "global"
 
-    ato_setup $@     # we may be able to get away with not doing this
+    ato_setup $@
 
-    ato_set --name "the default name"
+    ato_set --name "the default value of name"
 
     function version() {
         echo "version 1.0.0"
