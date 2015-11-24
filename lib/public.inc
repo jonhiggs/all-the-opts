@@ -148,4 +148,22 @@ ato_argument() {
   esac
 }
 
+ato_options() {
+  context="$(ato_context)"
+  var="$(__ato_option_var ${context})[@]"
+
+  IFS=$'\n'
+  for data in $(__ato_option_read ${context}); do
+    if __ato_option_read_long "${data}" &> /dev/null; then
+      echo "--$(__ato_option_read_long "${data}")"
+      continue
+    fi
+
+    if __ato_option_read_short "${data}" &> /dev/null; then
+      echo "-$(__ato_option_read_short "${data}")"
+      continue
+    fi
+  done
+}
+
 # vim: ft=sh
