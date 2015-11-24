@@ -129,22 +129,22 @@ function testArgument() {
   assertFalse "returns false when value is '-'"                             \
     "ato_argument xxx"
 
-  #assertEquals "print empty string when value is '-'"                             \
-  #  "" \
-  #  "$(ato_argument xxx)"
+  assertEquals "print empty string when value is '-'"                             \
+    "" \
+    "$(ato_argument xxx)"
 
-  #ATO_GLOBAL=("x xxx something true")
-  #assertTrue "returns false when value is 'true'"                             \
-  #  "ato_argument xxx"
+  ATO_GLOBAL=("x xxx something true")
+  assertTrue "returns false when value is 'true'"                             \
+    "ato_argument xxx"
 
-  #ATO_GLOBAL=("x xxx something seOEIFJsef==")
-  #assertTrue "returns true when value is base64"                             \
-  #  "ato_argument xxx"
+  ATO_GLOBAL=("x xxx something seOEIFJsef==")
+  assertTrue "returns true when value is base64"                             \
+    "ato_argument xxx"
 
-  #ATO_GLOBAL=("x xxx something YWJjZAo=")
-  #assertEquals "prints decoded value it's set"                             \
-  #  "abcd" \
-  #  "$(ato_argument xxx)"
+  ATO_GLOBAL=("x xxx something YWJjZAo=")
+  assertEquals "prints decoded value it's set"                             \
+    "abcd" \
+    "$(ato_argument xxx)"
 }
 
 source $(dirname $0)/shunit/src/shunit2

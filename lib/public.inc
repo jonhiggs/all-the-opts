@@ -144,15 +144,15 @@ ato_setup() {
 }
 
 ato_argument() {
+  [[ $# -ne 1 ]] && __ato_usage "<option>"
   context="$(ato_context)"
-  option=$1
-  data="$(__ato_option_read ${context} ${option})"
+  position=$(__ato_option_position ${context} $1)
+  data="$(__ato_option_read ${context} ${position})"
   value="$(__ato_option_read_optarg "${data}")"
-  [[ $? -ne 0 ]] && return 1
   case "${value}" in
-    "true") return 0 ;;
-    "-")    return 1 ;;
-    *)      [[ ! -z ${value} ]] && echo ${value}; return 0 ;;
+    "true")  return 0                   ;;
+    "false") return 1                   ;;
+    *)       echo ${value} | base64 -D  ;;
   esac
 }
 
