@@ -113,20 +113,20 @@ function testRead() {
 #    "something"                       \
 #    "$(ato_operands something; ato_operands)"
 #}
-#
-#function testSet() {
-#  ATO_GLOBAL=()
-#  assertFalse "when option doesn't exist" \
-#    'ato_set blah optarg'
-#
-#  assertEquals "when not enough arguments"                             \
-#    "USAGE: ato_set <option> <option_argument>"                   \
-#    "$(ato_set 2>&1)"
-#
-#  assertEquals "when doesn't exist"                             \
-#    "ERROR: option 'blah' does not exist"                   \
-#    "$(ato_set "blah" "value" 2>&1)"
-#
+
+function testSet() {
+  ATO_GLOBAL=()
+  assertFalse "exit status when option doesn't exist" \
+    'ato_set blah optarg'
+
+  assertEquals "when doesn't exist"                             \
+    "ERROR: option 'blah' does not exist"                   \
+    "$(ato_set "blah" "value" 2>&1)"
+
+  assertEquals "when not enough arguments"                             \
+    "USAGE: ato_set <option> <option_argument>"                   \
+    "$(ato_set 2>&1)"
+
 #  ATO_GLOBAL=()
 #  ATO_GLOBAL+=("z zzz something -")
 #  assertTrue "returns true when setting an existing value"                             \
@@ -147,8 +147,8 @@ function testRead() {
 #  assertEquals "value actually gets set"                             \
 #    "z zzz something -" \
 #    "$(ato_set zzz false; echo ${ATO_GLOBAL[0]})"
-#}
-#
+}
+
 #function testArgument() {
 #  ATO_GLOBAL=("x xxx something -")
 #  assertFalse "returns false when value is '-'"                             \

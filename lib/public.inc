@@ -18,11 +18,11 @@ ato_add() {
     return 1
   fi
 
-  context="$(ato_context)"
-  short=$1
-  long=$2
-  description=$3
-  optarg=${4:-"-"}
+  context=$1
+  short=$2
+  long=$3
+  description=$4
+  optarg=${5:-"-"}
 
   for t in short long; do
     if ( __ato_option_read ${context} ${!t} &> /dev/null ); then
@@ -72,14 +72,17 @@ ato_set() {
   context="$(ato_context)"
   option=$1
 
+  __ato_option_position ${context} ${option} ||
+    __ato_error "option '${option}' does not exist" && return 1
+
   case $2 in
     "true")  optarg="true" ;;
     "false") optarg="-"    ;;
     *)       optarg="$(echo $2 | base64)"
   esac
 
-  data=$(__ato_option_read ${context} ${option} | awk '{$4="'${optarg}'"}1')
   position=$(__ato_option_position ${context} ${option})
+  data=$(__ato_option_read ${context} ${position} | awk '{$4="'${optarg}'"}1')
   [[ $? -ne 0 ]] && __ato_error "option '${option}' does not exist" && return 1
   __ato_option_write "${context}" "${data}" "${position}"
   return $?
