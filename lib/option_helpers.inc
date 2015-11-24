@@ -12,6 +12,7 @@ __ato_option_var_size() {
 }
 
 __ato_option_position() {
+  [[ $# -ne 2 ]] && __ato_usage "<context> <option>" && return 1
   context=$1
   option=$2
   n=0
