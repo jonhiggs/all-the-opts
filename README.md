@@ -34,7 +34,7 @@ TODO: Write a glossary of terms
 - ato_operands:        the things that are not arguments (what's the real name?)
 - ato_read:            should read the option argument
 - ato_setup:           do this first (may not be necessary)
-- ato_options:         a list of the known options
+- ato_options:         a list of the 'true' options
 
 ## A Usage Example
 
