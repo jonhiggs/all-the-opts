@@ -82,8 +82,7 @@ ato_set() {
   esac
 
   position=$(__ato_option_position ${context} ${option})
-  data=$(__ato_option_read ${context} ${position} | awk '{$4="'${optarg}'"}1')
-  [[ $? -ne 0 ]] && __ato_error "option '${option}' does not exist" && return 1
+  data=$(__ato_option_read ${context} ${position})
   __ato_option_write "${context}" "${data}" "${position}"
   return $?
 }
@@ -93,14 +92,19 @@ ato_read() {
   context="$(ato_context)"
   option=$1
   position=$(__ato_option_position ${context} ${option})
-  [[ $? -ne 0 ]] && __ato_error "option '${option}' is invalid" && return 1
-  data=$(__ato_option_read ${context} ${position})
-  [[ $? -ne 1 ]] && return 1
+  if [[ $? -ne 0 ]]; then
+    __ato_error "option '${option}' is invalid"
+    return 1
+  fi
+  data=$(__ato_option_read ${context} ${position} || return 1)
   option_argument="$(__ato_option_read_optarg "${data}")"
+  [[ $? -eq 0 ]] || return 1
+
   case ${option_argument} in
     "true") return 0                  ;;
     *)      echo "${option_argument}" ;;
   esac
+  return 0
 }
 
 ato_help() {
@@ -152,17 +156,10 @@ ato_options() {
   context="$(ato_context)"
   var="$(__ato_option_var ${context})[@]"
 
+  # TODO: refactor this into __ato_options_something
   IFS=$'\n'
   for data in $(__ato_option_read ${context}); do
-    if __ato_option_read_long "${data}" &> /dev/null; then
-      echo "--$(__ato_option_read_long "${data}")"
-      continue
-    fi
-
-    if __ato_option_read_short "${data}" &> /dev/null; then
-      echo "-$(__ato_option_read_short "${data}")"
-      continue
-    fi
+    __ato_option_read_long "${data}" || __ato_option_read_short "${data}"
   done
 }
 

@@ -127,11 +127,11 @@ function testSet() {
     "USAGE: ato_set <option> <option_argument>"                   \
     "$(ato_set 2>&1)"
 
-#  ATO_GLOBAL=()
-#  ATO_GLOBAL+=("z zzz something -")
-#  assertTrue "returns true when setting an existing value"                             \
-#    "ato_set zzz value"
-#
+  ATO_GLOBAL=()
+  ATO_GLOBAL+=("z zzz something -")
+  assertTrue "returns true when setting an existing value"                             \
+    "ato_set zzz value"
+
 #  assertEquals "value actually gets set"                             \
 #    "z zzz something dGhpcyBpcyB0aGUgdmFsdWUK" \
 #    "$(ato_set zzz 'this is the value'; echo ${ATO_GLOBAL[0]})"
