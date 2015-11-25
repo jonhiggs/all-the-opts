@@ -132,15 +132,10 @@ ato_help() {
 
 ato_setup() {
   context="$(ato_context)"
-  argv="$(eval $(__ato_getopt_cmd))"
+  argv="$(eval $(__ato_getopt_cmd ${context}))"
   eval "set -- $argv"
   __ato_getopt_set_operands $@
   __ato_getopt_set_option_arguments ${context} $@
-
-  if ato_argument ${context} help; then
-    ato_help
-    return 1
-  fi
 }
 
 ato_argument() {

@@ -147,6 +147,12 @@ function testArgument() {
     "$(ato_argument xxx)"
 }
 
+function testOptions() {
+  ATO_GLOBAL=("x xxx something -")
+  assertEquals "xxx"                      \
+    "$(ato_options)"
+}
+
 source $(dirname $0)/shunit/src/shunit2
 
 # vim: ft=sh

@@ -50,9 +50,9 @@ __ato_getopt_set_option_arguments() {
 
     if [[ "$a" =~ ^- ]]; then
       option="$(echo $a | sed -E 's/^[\-]{1,2}//')"
-      ato_set ${context} ${option} "true"
+      ato_set ${option} "true"
     else
-      ato_set ${context} ${option} "$a"
+      ato_set ${option} "$a"
     fi
   done
 }
