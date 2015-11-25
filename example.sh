@@ -4,7 +4,7 @@ source "$(dirname $0)/lib/all-the-opts.inc"
 ato_description               "This is an example application"
 ato_context                   "global"
 ato_add           v version   "Display the version information"
-ato_add           h help      "Set your name"
+ato_add           h help      "Show this help"
 
 ato_setup $@ || exit 0
 
