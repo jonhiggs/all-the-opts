@@ -3,13 +3,14 @@ source "$(dirname $0)/lib/all-the-opts.inc"
 ato_context "global"
 ato_description          "This is an example application"
 
-#          CONTEXT      SHORT  LONG      DESCRIPTION
-#ato_add   n:     name:     "Set your name"
-#ato_read
-#ato_add   v      version   "Display the version information"
+#          SHORT  LONG      DESCRIPTION
+#ato_add   name:     "Set your name"
 
+ato_add   v      version   "Display the version information"
 ato_add   h      help      "Set your name"
-ato_read
+echo ${ATO_GLOBAL[@]}
+ato_options
+
 #ato_setup $@ || exit 0
 
 #for operand in ato_operands; do

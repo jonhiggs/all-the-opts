@@ -45,8 +45,8 @@ TODO: Write a glossary of terms
     ato_description          "this is an example application"
     ato_context_add          "global"
 
-    ato_add global n name    "Set your name"
-    ato_add global v version "Display the version information"
+    ato_add n name    "Set your name"
+    ato_add v version "Display the version information"
 
     ato_setup $@
 

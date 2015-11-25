@@ -14,15 +14,15 @@ ato_description() {
 
 ato_add() {
   if [[ $# -ne 3 ]] && [[ $# -ne 4 ]]; then
-    __ato_usage "<context> <short_opt> <long_opt> <desription> [option_argument]"
+    __ato_usage "<short_opt> <long_opt> <desription> [option_argument]"
     return 1
   fi
 
-  context=$1
-  short=$2
-  long=$3
-  description=$4
-  optarg=${5:-"-"}
+  context="$(ato_context)"
+  short=$1
+  long=$2
+  description=$3
+  optarg=${4:-"-"}
 
   for t in short long; do
     if ( __ato_option_read ${context} ${!t} &> /dev/null ); then
