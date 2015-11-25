@@ -158,6 +158,8 @@ ato_options() {
   # TODO: refactor this into __ato_options_something
   IFS=$'\n'
   for data in $(__ato_option_read ${context}); do
+    optarg="$(__ato_option_read_optarg "${data}")"
+    [[ "${optarg}" == "false" ]] && continue
     __ato_option_read_long "${data}" || __ato_option_read_short "${data}"
   done
 }

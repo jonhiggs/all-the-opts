@@ -7,15 +7,26 @@ ato_add           v version   "Display the version information"
 ato_add           h help      "Set your name"
 
 ato_setup $@ || exit 0
-ato_help
 
-ato_read version; echo $?
+for option in $(ato_options); do
+  value="$(ato_read ${option})"
 
+  case ${option} in
+    "version")
+      echo "the version of the app is 0.1"
+      exit 0
+      ;;
+    "help")
+      ato_help
+      exit 0
+    ;;
+  esac
+done
 
-#for operand in ato_operands; do
-#  echo "found an operand of ${operand}"
-#done
-#
+for operand in $(ato_operands); do
+  echo "found an operand of ${operand}"
+done
+
 #ato_argument global version && echo "version is set"
 #
 #name="$(ato_argument global name)"

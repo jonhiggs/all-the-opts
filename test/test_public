@@ -149,7 +149,15 @@ function testArgument() {
 
 function testOptions() {
   ATO_GLOBAL=("x xxx something -")
-  assertEquals "xxx"                      \
+  assertEquals ""                      \
+    "$(ato_options)"
+
+  ATO_GLOBAL=("x xxx something true")
+  assertEquals "xxx"                   \
+    "$(ato_options)"
+
+  ATO_GLOBAL=("x xxx something value")
+  assertEquals "xxx"                   \
     "$(ato_options)"
 }
 

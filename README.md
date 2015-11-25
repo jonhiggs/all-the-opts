@@ -27,7 +27,7 @@ TODO: Write a glossary of terms
 
 ## Functionality
 
-- ato_add:             context, short, long, description (without last three, show)
+- ato_add:             context, short, long, description (without last three, show). The order that you add is the order that it is evaluated.
 - ato_context:         show set contexts or add a context
 - ato_description:     set or show the description
 - ato_help:            generate a help message
